@@ -1,10 +1,10 @@
 import '../../chunks/page-ssr_C2-ti48D.mjs';
-import { e as createAstro, f as createComponent, l as renderComponent, r as renderTemplate, m as maybeRenderHead, h as addAttribute, n as Fragment, u as unescapeHTML } from '../../chunks/astro/server_CBEuluO7.mjs';
+import { e as createComponent, l as renderComponent, r as renderTemplate, h as createAstro, m as maybeRenderHead, g as addAttribute, n as Fragment, u as unescapeHTML } from '../../chunks/astro/server_DCXK_7Ub.mjs';
 import 'piccolore';
-import { f as fetchBlogPost, $ as $$Layout } from '../../chunks/client_BFW7a9Fd.mjs';
+import { f as fetchBlogPost, $ as $$Layout } from '../../chunks/client_DSwMLmDU.mjs';
 export { renderers } from '../../renderers.mjs';
 
-const $$Astro = createAstro("https://kobe-kataduke-support.jp");
+const $$Astro = createAstro();
 const prerender = false;
 const $$slug = createComponent(async ($$result, $$props, $$slots) => {
   const Astro2 = $$result.createAstro($$Astro, $$props, $$slots);

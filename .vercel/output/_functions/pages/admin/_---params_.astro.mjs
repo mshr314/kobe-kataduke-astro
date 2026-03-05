@@ -1,10 +1,10 @@
 import '../../chunks/page-ssr_C2-ti48D.mjs';
-import { e as createAstro, f as createComponent, h as addAttribute, k as renderHead, l as renderComponent, r as renderTemplate } from '../../chunks/astro/server_CBEuluO7.mjs';
+import { e as createComponent, g as addAttribute, k as renderHead, l as renderComponent, r as renderTemplate, h as createAstro } from '../../chunks/astro/server_DCXK_7Ub.mjs';
 import 'piccolore';
 /* empty css                                           */
 export { renderers } from '../../renderers.mjs';
 
-const $$Astro = createAstro("https://kobe-kataduke-support.jp");
+const $$Astro = createAstro();
 async function getStaticPaths() {
   return [{ params: { path: "admin" } }];
 }
