@@ -2,7 +2,6 @@
 import { defineConfig } from 'astro/config';
 import { loadEnv } from 'vite';
 import sanity from '@sanity/astro';
-import react from '@astrojs/react';
 import tailwindcss from '@tailwindcss/vite';
 import vercel from '@astrojs/vercel';
 import sitemap from '@astrojs/sitemap';
@@ -14,13 +13,12 @@ export default defineConfig({
   adapter: vercel(),
   integrations: [
     sanity({
-      projectId: env.PUBLIC_SANITY_PROJECT_ID || 'YOUR_PROJECT_ID',
-      dataset: env.PUBLIC_SANITY_DATASET || 'kobe-kataduke',
+      projectId: env.PUBLIC_SANITY_PROJECT_ID || 'mqj7r953',
+      dataset: env.PUBLIC_SANITY_DATASET || 'production',
       useCdn: true,
       apiVersion: '2024-03-03',
       studioBasePath: '/admin',
     }),
-    react(),
     sitemap(),
   ],
   output: 'server',
