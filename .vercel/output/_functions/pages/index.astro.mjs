@@ -1,7 +1,7 @@
-import '../chunks/page-ssr_QJdE5M25.mjs';
-import { f as createComponent, l as renderComponent, r as renderTemplate, m as maybeRenderHead, h as addAttribute, n as renderScript } from '../chunks/astro/server_B54mHHzv.mjs';
+import '../chunks/page-ssr_C2-ti48D.mjs';
+import { f as createComponent, l as renderComponent, r as renderTemplate, m as maybeRenderHead, h as addAttribute, o as renderScript } from '../chunks/astro/server_CBEuluO7.mjs';
 import 'piccolore';
-import { b as fetchTestimonials, a as fetchBlogPosts, $ as $$Layout } from '../chunks/client_Jt_iCkVL.mjs';
+import { b as fetchTestimonials, a as fetchBlogPosts, $ as $$Layout } from '../chunks/client_Cq0__IeH.mjs';
 export { renderers } from '../renderers.mjs';
 
 const $$Index = createComponent(async ($$result, $$props, $$slots) => {

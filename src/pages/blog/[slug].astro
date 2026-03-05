@@ -1,7 +1,24 @@
 ---
 import Layout from '../../layouts/Layout.astro'
 import { fetchBlogPost } from '../../sanity/client'
-import { PortableText } from '@portabletext/react'
+// PortableTextをシンプルなHTMLに変換するユーティリティ
+function ptToHtml(blocks: any[]): string {
+  if (!blocks) return ''
+  return blocks.map(block => {
+    if (block._type === 'block') {
+      const text = (block.children || []).map((c: any) => c.text || '').join('')
+      const style = block.style || 'normal'
+      if (style === 'h2') return `<h2 class="text-xl font-black text-navy-800 mt-8 mb-3">${text}</h2>`
+      if (style === 'h3') return `<h3 class="text-lg font-bold text-navy-700 mt-6 mb-2">${text}</h3>`
+      if (style === 'blockquote') return `<blockquote class="border-l-4 border-navy-300 pl-4 text-gray-500 italic my-4">${text}</blockquote>`
+      return `<p class="mb-4 leading-relaxed">${text}</p>`
+    }
+    if (block._type === 'image' && block.asset) {
+      return `<img src="${block.asset.url || ''}" alt="${block.alt || ''}" class="rounded-xl my-6 w-full"/>`
+    }
+    return ''
+  }).join('')
+}
 
 export const prerender = false
 
@@ -91,7 +108,7 @@ const articleSchema = {
 
       <div class="prose prose-sm md:prose-base max-w-none text-gray-700 leading-relaxed" itemprop="articleBody">
         {post.body ? (
-          <PortableText value={post.body} />
+          <Fragment set:html={ptToHtml(post.body)} />
         ) : (
           <p class="text-gray-400 text-center py-12">記事のコンテンツを読み込み中...</p>
         )}
