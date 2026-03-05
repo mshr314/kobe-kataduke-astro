@@ -476,15 +476,15 @@ const categoryLabels: Record<string, string> = {
     const form = document.getElementById('estimateForm');
     const successMsg = document.getElementById('formSuccess');
     const errorMsg = document.getElementById('formError');
-    const submitBtn = document.getElementById('submitBtn') as HTMLButtonElement | null;
+    const submitBtn = document.getElementById('submitBtn');
     if (!form || !successMsg || !errorMsg || !submitBtn) return;
     form.addEventListener('submit', function (e) {
       e.preventDefault();
       errorMsg.classList.add('hidden');
-      const name = (document.getElementById('name') as HTMLInputElement).value.trim();
-      const phone = (document.getElementById('phone') as HTMLInputElement).value.trim();
-      const roomType = (document.getElementById('roomType') as HTMLSelectElement).value;
-      const errors: string[] = [];
+      const name = document.getElementById('name').value.trim();
+      const phone = document.getElementById('phone').value.trim();
+      const roomType = document.getElementById('roomType').value;
+      const errors = [];
       if (!name) errors.push('お名前をご入力ください。');
       if (!phone) errors.push('お電話番号をご入力ください。');
       if (!roomType) errors.push('間取りを選択してください。');
@@ -496,7 +496,7 @@ const categoryLabels: Record<string, string> = {
       submitBtn.disabled = true;
       submitBtn.textContent = '送信中...';
       setTimeout(function () {
-        (form as HTMLElement).classList.add('hidden');
+        form.classList.add('hidden');
         successMsg.classList.remove('hidden');
       }, 1200);
     });

@@ -1,8 +1,17 @@
 import { createClient } from '@sanity/client'
 import imageUrlBuilder from '@sanity/image-url'
 
-const projectId = import.meta.env.PUBLIC_SANITY_PROJECT_ID || 'YOUR_PROJECT_ID'
-const dataset = import.meta.env.PUBLIC_SANITY_DATASET || 'kobe-kataduke'
+// SSRでimport.meta.envが使えない環境に対応
+const projectId = (
+  (typeof import.meta !== 'undefined' && import.meta.env?.PUBLIC_SANITY_PROJECT_ID) ||
+  process.env.PUBLIC_SANITY_PROJECT_ID ||
+  'mqj7r953'
+)
+const dataset = (
+  (typeof import.meta !== 'undefined' && import.meta.env?.PUBLIC_SANITY_DATASET) ||
+  process.env.PUBLIC_SANITY_DATASET ||
+  'production'
+)
 
 export const sanityClient = createClient({
   projectId,
