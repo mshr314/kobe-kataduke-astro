@@ -1,0 +1,51 @@
+---
+import '../styles/global.css'
+
+interface Props {
+  title?: string;
+  description?: string;
+  canonical?: string;
+  ogImage?: string;
+  schema?: object[];
+}
+
+const {
+  title = '神戸市の遺品整理・ゴミ屋敷清掃なら【神戸お片付けサポートセンター】即日対応・無料見積り',
+  description = '神戸市全9区対応。遺品整理・生前整理・ゴミ屋敷清掃は神戸お片付けサポートセンターへ。遺品整理士在籍、最短即日対応、お見積り後の追加費用一切なし。',
+  canonical = Astro.url.href,
+  ogImage = '/og-image.jpg',
+  schema = [],
+} = Astro.props;
+---
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+
+    <!-- OGP -->
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:locale" content="ja_JP" />
+    <meta property="og:image" content={new URL(ogImage, Astro.site).href} />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet" />
+
+    <!-- Schema.org JSON-LD -->
+    {schema.map((s) => (
+      <script type="application/ld+json" set:html={JSON.stringify(s)} />
+    ))}
+  </head>
+  <body class="font-sans bg-white text-gray-800 antialiased pb-24">
+    <slot />
+  </body>
+</html>
