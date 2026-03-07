@@ -503,39 +503,22 @@ const categoryLabels: Record<string, string> = {
   })();
 </script>
 
-<!-- =====================================================
-     Dify 見積もりヒアリングボット
-     Difyダッシュボード → 「公開」→「Webサイトへの埋め込み」から
-     token値を取得して DIFY_TOKEN を更新してください
-     ===================================================== -->
-<script>
-  // Dify チャットボット設定
-  // TODO: dify.ai でボット作成後に token を差し替えてください
+<!-- Dify 見積もりヒアリングボット -->
+<script is:inline>
   window.difyChatbotConfig = {
-    token: 'q2bJnbT8NVhaVG2C',
-    baseUrl: 'https://api.dify.ai',
-    systemVariables: {
-      site_name: '神戸お片付けサポートセンター'
-    }
+    token: 'q2bJnbT8NVhaVG2C'
   };
 </script>
-<script
-  src="https://udify.app/embed.min.js"
-  id="q2bJnbT8NVhaVG2C"
-  defer
-  is:inline
-></script>
+<script is:inline src="https://udify.app/embed.min.js" id="q2bJnbT8NVhaVG2C" defer></script>
 <style>
-  /* Dify チャットバブルのカスタマイズ */
   #dify-chatbot-bubble-button {
-    background-color: #06c755 !important; /* LINE グリーン */
-    bottom: 90px !important; /* スティッキーCTAの上に表示 */
+    background-color: #06c755 !important;
+    bottom: 90px !important;
     right: 16px !important;
   }
   #dify-chatbot-bubble-button:hover {
     background-color: #05a644 !important;
   }
-  /* PCでは位置を調整 */
   @media (min-width: 768px) {
     #dify-chatbot-bubble-button {
       bottom: 24px !important;
