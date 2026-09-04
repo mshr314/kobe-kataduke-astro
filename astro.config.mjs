@@ -7,6 +7,8 @@ import vercel from '@astrojs/vercel';
 import sitemap from '@astrojs/sitemap';
 
 export default defineConfig({
+  // canonical URL と @astrojs/sitemap の生成に必要
+  site: 'https://kobe-kataduke-support.jp',
   integrations: [
     sanity({
       projectId: 'mqj7r953',

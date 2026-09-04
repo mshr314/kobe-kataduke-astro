@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+Disallow: /admin/
+
+# 静的ページ（@astrojs/sitemap が生成）
+Sitemap: https://kobe-kataduke-support.jp/sitemap-index.xml
+# 区ページ・ブログ（動的ページ）
+Sitemap: https://kobe-kataduke-support.jp/sitemap-dynamic.xml

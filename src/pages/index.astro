@@ -30,15 +30,16 @@ const defaultBlogPosts = [
 const displayTestimonials = testimonials.length > 0 ? testimonials : defaultTestimonials
 const displayBlogPosts = blogPosts.length > 0 ? blogPosts : defaultBlogPosts
 
+// 当サイトは施工業者ではなく「業者を比較・紹介するサービス」のため、
+// LocalBusiness（実店舗・施工事業者）ではなく Organization + Service で表現する。
+// 実態と異なる構造化データは、検索エンジンにもAIにも誤った情報を伝えるため使わない。
 const localBusinessSchema = {
   "@context": "https://schema.org",
-  "@type": "LocalBusiness",
+  "@type": "Organization",
+  "@id": "https://kobe-kataduke-support.jp/#org",
   "name": "神戸お片付けサポートセンター",
-  "description": "神戸市全9区対応の遺品整理・ゴミ屋敷清掃・生前整理・特殊清掃の専門業者。遺品整理士在籍。最短即日対応。",
+  "description": "神戸市の遺品整理・生前整理・ゴミ屋敷清掃・特殊清掃について、対応可能な業者を無料で比較・ご紹介する窓口サービスです。作業は提携する専門業者が行います。",
   "url": "https://kobe-kataduke-support.jp/",
-  "telephone": "LINEで無料相談",
-  "priceRange": "¥¥",
-  "openingHours": "Mo-Su 00:00-24:00",
   "areaServed": [
     { "@type": "City", "name": "神戸市東灘区" },
     { "@type": "City", "name": "神戸市灘区" },
@@ -50,15 +51,22 @@ const localBusinessSchema = {
     { "@type": "City", "name": "神戸市垂水区" },
     { "@type": "City", "name": "神戸市西区" },
   ],
-  "hasOfferCatalog": {
-    "@type": "OfferCatalog",
-    "name": "遺品整理・ゴミ屋敷清掃サービス",
-    "itemListElement": [
-      { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "遺品整理" } },
-      { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "生前整理" } },
-      { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "ゴミ屋敷清掃" } },
-      { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "特殊清掃" } },
-    ],
+  "knowsAbout": ["遺品整理", "生前整理", "ゴミ屋敷清掃", "特殊清掃", "不用品回収"],
+}
+
+// 提供しているのは「紹介・比較」というサービスそのもの
+const serviceSchema = {
+  "@context": "https://schema.org",
+  "@type": "Service",
+  "name": "神戸市の遺品整理業者 無料比較・紹介",
+  "serviceType": "遺品整理業者の比較・紹介",
+  "provider": { "@id": "https://kobe-kataduke-support.jp/#org" },
+  "areaServed": { "@type": "City", "name": "神戸市" },
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "JPY",
+    "description": "ご相談・業者のご紹介は無料です。作業費用は、実際に依頼される業者との契約に基づきます。",
   },
 }
 
@@ -66,9 +74,11 @@ const faqSchema = {
   "@context": "https://schema.org",
   "@type": "FAQPage",
   "mainEntity": [
-    { "@type": "Question", "name": "見積もり後の追加料金は本当にないですか？", "acceptedAnswer": { "@type": "Answer", "text": "はい、絶対にありません。事前にお部屋の状況をしっかり確認し、すべての作業内容・処分費用を含めた「完全コミコミ価格」でお見積りします。" } },
-    { "@type": "Question", "name": "遠方に住んでいて立ち会えませんが、依頼可能ですか？", "acceptedAnswer": { "@type": "Answer", "text": "もちろん可能です。作業前・中・後の写真・動画をLINEやメールでリアルタイムにご報告しますので、遠方の方でも安心してお任せいただけます。" } },
-    { "@type": "Question", "name": "足の踏み場もないゴミ屋敷ですが、そのままの状態で大丈夫ですか？", "acceptedAnswer": { "@type": "Answer", "text": "大丈夫です。むしろそのような状況でのご依頼が最も多く、ゴミ屋敷清掃のプロとして豊富な実績がございます。秘密は厳守します。" } },
+    { "@type": "Question", "name": "このサイトは遺品整理業者ですか？", "acceptedAnswer": { "@type": "Answer", "text": "いいえ。当サイトは神戸市の遺品整理・ゴミ屋敷清掃に対応できる業者を無料で比較・ご紹介する窓口です。実際の作業は、ご紹介した提携業者が行います。ご契約は、お客様と業者との間で直接結んでいただきます。" } },
+    { "@type": "Question", "name": "紹介や相談に費用はかかりますか？", "acceptedAnswer": { "@type": "Answer", "text": "ご相談・業者のご紹介は無料です。当サイトは、ご紹介した業者から紹介手数料を受け取ることで運営しています。そのため、お客様が当サイトへお支払いいただく費用はありません。" } },
+    { "@type": "Question", "name": "遺品整理の費用相場はどのくらいですか？", "acceptedAnswer": { "@type": "Answer", "text": "間取りと物量によって変わりますが、1Kで3万円前後から、3LDK以上で20万円を超えることもあります。作業員の人数、搬出のしやすさ、処分品の量、買取できる品の有無で増減します。正確な金額は、現地見積もりでご確認ください。" } },
+    { "@type": "Question", "name": "見積もり後に追加料金が発生することはありますか？", "acceptedAnswer": { "@type": "Answer", "text": "業者や契約内容によります。追加料金の有無は業者ごとに方針が異なるため、見積書に「追加料金の有無」と「どのような場合に発生するか」が明記されているかを必ずご確認ください。当サイトでは、見積書の内訳が明確な業者をご紹介するよう努めています。" } },
+    { "@type": "Question", "name": "遠方に住んでいて立ち会えませんが、依頼できますか？", "acceptedAnswer": { "@type": "Answer", "text": "立ち会いなしに対応している業者もあります。その場合、作業前後の写真や動画で報告を受ける形が一般的です。ただし対応可否は業者によって異なるため、ご相談時にその旨をお伝えください。条件に合う業者をご紹介します。" } },
   ],
 }
 
@@ -84,8 +94,8 @@ const categoryLabels: Record<string, string> = {
 
 <Layout
   title="神戸市の遺品整理・ゴミ屋敷清掃なら【神戸お片付けサポートセンター】即日対応・無料見積り"
-  description="神戸市全9区対応。遺品整理・生前整理・ゴミ屋敷清掃は神戸お片付けサポートセンターへ。遺品整理士在籍、最短即日対応、お見積り後の追加費用一切なし。"
-  schema={[localBusinessSchema, faqSchema]}
+  description="神戸市全9区対応。遺品整理・生前整理・ゴミ屋敷清掃に対応できる業者を無料で比較・ご紹介します。間取り別の費用相場、区ごとの搬出事情、業者選びの確認点をまとめています。ご相談・紹介は無料です。"
+  schema={[localBusinessSchema, serviceSchema, faqSchema]}
 >
 
 <!-- HEADER -->
@@ -112,15 +122,15 @@ const categoryLabels: Record<string, string> = {
     <div class="absolute inset-0 bg-gradient-to-b from-[#081a38]/80 via-[#081a38]/60 to-[#081a38]/90"></div>
   </div>
   <div class="relative max-w-3xl mx-auto px-5 py-14 md:py-20 text-center">
-    <div class="inline-block bg-[#e8a900] text-[#081a38] text-xs font-black px-4 py-1.5 rounded-full mb-5 tracking-widest shadow">神戸市全9区 最短即日対応</div>
+    <div class="inline-block bg-[#e8a900] text-[#081a38] text-xs font-black px-4 py-1.5 rounded-full mb-5 tracking-widest shadow">神戸市全9区対応・無料紹介</div>
     <h1 class="text-2xl md:text-4xl font-black leading-snug mb-4 drop-shadow-md">
-      神戸市のご実家のお片付け、遺品整理。<br class="hidden md:block"/>
-      <span class="text-[#f5c842]">ご遺族に寄り添い、</span>最短即日で解決します。
+      神戸市の遺品整理・ゴミ屋敷清掃。<br class="hidden md:block"/>
+      <span class="text-[#f5c842]">対応できる業者を、</span>無料で比較・ご紹介します。
     </h1>
     <p class="text-blue-100 text-sm md:text-base mb-7 leading-relaxed">
-      <span class="bg-white/15 rounded px-2 py-0.5 mr-2">お見積り後の追加費用一切なし</span>
+      <span class="bg-white/15 rounded px-2 py-0.5 mr-2">ご相談・紹介は無料</span>
       <span class="bg-white/15 rounded px-2 py-0.5 mr-2">秘密厳守</span>
-      <span class="bg-white/15 rounded px-2 py-0.5">立ち会い不要も可</span>
+      <span class="bg-white/15 rounded px-2 py-0.5">しつこい営業なし</span>
     </p>
     <div class="flex flex-col items-center gap-3">
       <a href="https://line.me/R/ti/p/@622cifkz" target="_blank" rel="noopener" class="cta-btn tel-link relative pulse-ring w-full max-w-sm text-xl md:text-2xl py-5 px-8 shadow-2xl">
@@ -130,10 +140,14 @@ const categoryLabels: Record<string, string> = {
       <span class="text-blue-200 text-sm">💬 LINEで24時間・年中無休受付</span>
     </div>
     <div class="mt-8 grid grid-cols-3 gap-3 text-center text-xs text-blue-200">
-      <div class="bg-white/10 rounded-xl py-3 px-2"><div class="text-[#f5c842] text-xl font-black">1,200<span class="text-base">件以上</span></div><div>神戸市内実績</div></div>
-      <div class="bg-white/10 rounded-xl py-3 px-2"><div class="text-[#f5c842] text-xl font-black">4.9<span class="text-base">★</span></div><div>お客様満足度</div></div>
-      <div class="bg-white/10 rounded-xl py-3 px-2"><div class="text-[#f5c842] text-xl font-black">最短<span class="text-base">即日</span></div><div>駆けつけ対応</div></div>
+      <div class="bg-white/10 rounded-xl py-3 px-2"><div class="text-[#f5c842] text-xl font-black">全<span class="text-base">9区</span></div><div>神戸市に対応</div></div>
+      <div class="bg-white/10 rounded-xl py-3 px-2"><div class="text-[#f5c842] text-xl font-black">0<span class="text-base">円</span></div><div>相談・紹介は無料</div></div>
+      <div class="bg-white/10 rounded-xl py-3 px-2"><div class="text-[#f5c842] text-xl font-black">24<span class="text-base">時間</span></div><div>LINEで受付</div></div>
     </div>
+    <p class="mt-5 text-[11px] leading-relaxed text-blue-200/90">
+      当サイトは遺品整理業者ではなく、条件に合う業者を無料でご紹介する窓口です。<br class="hidden sm:block"/>
+      作業とご契約は、ご紹介先の業者との間で直接行っていただきます。
+    </p>
   </div>
 </section>
 <div class="section-divider"></div>
@@ -199,8 +213,8 @@ const categoryLabels: Record<string, string> = {
       </div>
       <div class="w-px h-16 bg-white/20 hidden sm:block"></div>
       <div class="text-sm text-blue-100 leading-relaxed">
-        <p class="font-black text-white text-base mb-1">神戸市内で1,200件以上の実績</p>
-        <p>ご依頼いただいたお客様の<span class="text-[#f5c842] font-bold">96%</span>が<br/>「また頼みたい」と回答されています。</p>
+        <p class="font-black text-white text-base mb-1">ご紹介先を選ぶときの基準</p>
+        <p>料金の明朗さ、必要な許認可の有無、対応の丁寧さ。<br/>この3点を満たす業者のみをご紹介しています。</p>
       </div>
     </div>
   </div>
@@ -211,12 +225,12 @@ const categoryLabels: Record<string, string> = {
 <section class="bg-white py-12 px-5" aria-labelledby="why-heading">
   <div class="max-w-3xl mx-auto">
     <p class="text-center text-xs font-bold tracking-widest text-[#1a4480] mb-2 uppercase">選ばれる理由</p>
-    <h2 id="why-heading" class="text-xl md:text-2xl font-black text-center text-[#081a38] mb-8">神戸市1,200件以上の実績。<br/>私たちが選ばれる<span class="text-[#e8a900]">3つの理由</span></h2>
+    <h2 id="why-heading" class="text-xl md:text-2xl font-black text-center text-[#081a38] mb-8">神戸に絞って選ぶから、<br/>ご紹介が<span class="text-[#e8a900]">早く・合う</span></h2>
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
       {[
-        { emoji: '🚚', title: '①神戸密着・即日対応', desc: '北区・西区のニュータウンから灘区・兵庫区の細い坂道まで、神戸の地形を知り尽くしたスタッフが対応。電話当日の作業開始も可能です。' },
-        { emoji: '🏅', title: '②遺品整理士在籍・供養も', desc: '資格を持つ「遺品整理士」が在籍。大切なお品物を丁寧に仕分けし、ご希望に応じて提携寺院でのお焚き上げ・供養も承ります。' },
-        { emoji: '💴', title: '③明朗パック料金・買取相殺', desc: 'わかりやすい間取り別パック料金で追加費用ゼロ。家電・貴金属・着物など価値あるお品は査定・買取を行い、費用から差し引きます。' },
+        { emoji: '🚚', title: '①神戸市に特化', desc: '北区・西区のニュータウンから灘区・兵庫区の坂道まで、神戸の地形と搬出条件を踏まえて、その現場に対応できる業者をお探しします。' },
+        { emoji: '🏅', title: '②有資格の業者をご紹介', desc: 'ご希望に応じて、遺品整理士が在籍する業者や、お焚き上げ・供養に対応できる業者をご紹介します。資格の有無は業者ごとに異なります。' },
+        { emoji: '💴', title: '③相見積もりで比較できる', desc: '複数社を比べることで、料金と作業範囲の違いが分かります。買取による相殺に対応する業者もあり、費用を抑えられる場合があります。' },
       ].map(r => (
         <article class="bg-[#f0f4fa] rounded-2xl p-6 text-center flex flex-col items-center">
           <div class="bg-[#0f2d5c] text-[#f5c842] rounded-full w-14 h-14 flex items-center justify-center text-2xl mb-4 shadow">{r.emoji}</div>
@@ -262,16 +276,16 @@ const categoryLabels: Record<string, string> = {
 <section class="bg-slate-50 py-12 px-5" aria-labelledby="pricing-heading">
   <div class="max-w-3xl mx-auto">
     <p class="text-center text-xs font-bold tracking-widest text-[#1a4480] mb-2 uppercase">料金案内</p>
-    <h2 id="pricing-heading" class="text-xl md:text-2xl font-black text-center text-[#081a38] mb-3">間取り別 <span class="text-[#c98700]">パック料金の目安</span></h2>
-    <p class="text-center text-gray-500 text-sm mb-8">すべてのサービスが含まれたコミコミ価格です。追加費用は一切いただきません。</p>
+    <h2 id="pricing-heading" class="text-xl md:text-2xl font-black text-center text-[#081a38] mb-3">間取り別 <span class="text-[#c98700]">費用相場の目安</span></h2>
+    <p class="text-center text-gray-500 text-sm mb-8">遺品整理の一般的な費用相場です。実際の金額は、業者・物量・搬出条件により異なります。</p>
     <div class="overflow-x-auto rounded-2xl shadow-md">
       <table class="w-full bg-white text-sm md:text-base border-collapse">
-        <caption class="sr-only">神戸お片付けサポートセンター 間取り別料金表</caption>
+        <caption class="sr-only">遺品整理の間取り別 費用相場の目安</caption>
         <thead>
           <tr class="bg-[#081a38] text-white">
             <th scope="col" class="py-4 px-4 text-left font-black">間取り</th>
             <th scope="col" class="py-4 px-4 text-center font-black">参考作業時間</th>
-            <th scope="col" class="py-4 px-4 text-right font-black text-[#f5c842]">料金（税込）</th>
+            <th scope="col" class="py-4 px-4 text-right font-black text-[#f5c842]">費用相場（目安）</th>
           </tr>
         </thead>
         <tbody>
@@ -292,11 +306,13 @@ const categoryLabels: Record<string, string> = {
       </table>
     </div>
     <div class="mt-4 bg-amber-50 border border-amber-300 rounded-xl p-4 text-sm text-amber-800">
-      <p class="font-bold mb-1">⚠️ 料金に関するご注意</p>
+      <p class="font-bold mb-1">⚠️ 費用に関するご注意</p>
       <ul class="list-disc list-inside space-y-1 text-amber-700">
-        <li>上記は目安金額です。荷物の量・内容・状態により変動する場合があります。</li>
-        <li>家電・貴金属・着物等の<strong>買取が発生した場合は全額値引き</strong>いたします。</li>
-        <li>ゴミ屋敷・特殊清掃は別途お見積りとなります。</li>
+        <li>上記は<strong>一般的な相場の目安</strong>であり、特定の業者の料金を保証するものではありません。</li>
+        <li>荷物の量・内容・状態、階数やエレベーターの有無などの搬出条件により変動します。</li>
+        <li>買取による費用の相殺に対応するかは、業者によって異なります。</li>
+        <li>ゴミ屋敷清掃・特殊清掃は、状況により別途お見積りとなります。</li>
+        <li><strong>正確な金額は、必ず現地見積もりでご確認ください。</strong></li>
       </ul>
     </div>
     <div class="mt-6 text-center">
@@ -409,11 +425,13 @@ const categoryLabels: Record<string, string> = {
     <h2 id="faq-heading" class="text-xl md:text-2xl font-black text-center text-[#081a38] mb-8">ご依頼前に気になる<span class="text-[#c98700]">よくある疑問</span></h2>
     <div class="space-y-4">
       {[
-        { q: 'Q. 見積もり後の追加料金は本当にないですか？', a: 'はい、絶対にありません。事前にお部屋の状況をしっかり確認し、すべての作業内容・処分費用を含めた「完全コミコミ価格」でお見積りします。当日の追加請求は一切ございません。' },
-        { q: 'Q. 遠方に住んでいて立ち会えませんが、依頼可能ですか？', a: 'もちろん可能です。作業前・中・後の写真・動画をLINEやメールでリアルタイムにご報告しますので、遠方にお住まいの方でも安心してお任せいただけます。' },
-        { q: 'Q. 足の踏み場もないゴミ屋敷ですが、そのままの状態で大丈夫ですか？', a: '大丈夫です。むしろそのような状況でのご依頼が最も多く、ゴミ屋敷清掃のプロとして豊富な実績がございます。秘密は厳守します。' },
-        { q: 'Q. 作業当日、どのような流れになりますか？', a: '当日は担当者が現場到着後、まず現状を確認しながら最終お見積りをご提示します。ご了承いただいたら作業開始。完了後にご確認・お支払い（現金・カード・振込対応）で終了です。' },
-        { q: 'Q. 形見の品や重要書類が混じっているか不安です。', a: '作業前にご依頼者様と一緒に「残すもの・処分するもの」を確認します。通帳・印鑑・権利証・アルバムなど重要品は必ず分別し、お客様にお渡しします。' },
+        { q: 'Q. このサイトは遺品整理業者ですか？', a: 'いいえ。当サイトは、神戸市の遺品整理・ゴミ屋敷清掃に対応できる業者を無料で比較・ご紹介する窓口です。実際の作業は、ご紹介した提携業者が行います。ご契約は、お客様と業者との間で直接結んでいただきます。' },
+        { q: 'Q. 紹介や相談に費用はかかりますか？', a: 'ご相談・業者のご紹介は無料です。当サイトは、ご紹介した業者から紹介手数料を受け取ることで運営しています。そのため、お客様が当サイトへお支払いいただく費用はありません。' },
+        { q: 'Q. 遺品整理の費用相場はどのくらいですか？', a: '間取りと物量によって変わりますが、1Kで3万円前後から、3LDK以上では20万円を超えることもあります。作業員の人数、搬出のしやすさ、処分品の量、買取できる品の有無によって増減します。正確な金額は現地見積もりでご確認ください。' },
+        { q: 'Q. 見積もり後に追加料金が発生することはありますか？', a: '業者や契約内容によります。追加料金の方針は業者ごとに異なるため、見積書に「追加料金の有無」と「どのような場合に発生するか」が明記されているかを必ずご確認ください。当サイトでは、見積書の内訳が明確な業者をご紹介するよう努めています。' },
+        { q: 'Q. 遠方に住んでいて立ち会えませんが、依頼できますか？', a: '立ち会いなしに対応している業者もあります。その場合、作業前後の写真や動画で報告を受ける形が一般的です。対応可否は業者によって異なるため、ご相談時にその旨をお伝えいただければ、条件に合う業者をご紹介します。' },
+        { q: 'Q. 足の踏み場もないゴミ屋敷ですが、そのままの状態で相談できますか？', a: 'はい、そのままの状態でご相談ください。片付けてからでなくて構いません。写真を送っていただければ、その状況に対応できる業者をお探しします。ご相談内容の秘密は厳守します。' },
+        { q: 'Q. 形見の品や重要書類が混じっているか不安です。', a: '多くの業者では、作業前に「残すもの・処分するもの」を依頼者と一緒に確認します。通帳・印鑑・権利証・アルバムなどの重要品を分別して手渡す運用が一般的です。ご不安な点は、見積もり時に業者へ直接ご確認ください。' },
       ].map(faq => (
         <details class="bg-white rounded-2xl shadow-sm overflow-hidden" itemscope itemtype="https://schema.org/Question">
           <summary class="flex items-center justify-between p-5 font-bold text-[#081a38] text-base hover:bg-[#f0f4fa] transition-colors" itemprop="name">
@@ -445,11 +463,24 @@ const categoryLabels: Record<string, string> = {
 </section>
 
 <!-- FOOTER -->
-<footer class="text-blue-300 text-xs py-6 px-5 text-center" style="background-color: #040e22">
+<footer class="text-blue-300 text-xs py-8 px-5 text-center" style="background-color: #040e22">
   <p class="font-bold text-white text-sm mb-1">神戸お片付けサポートセンター</p>
-  <p class="mb-2">神戸市全9区対応｜遺品整理・ゴミ屋敷清掃・生前整理・特殊清掃</p>
-  <p>対応エリア：東灘区 / 灘区 / 中央区 / 兵庫区 / 北区 / 長田区 / 須磨区 / 垂水区 / 西区</p>
-  <p class="mt-3 text-blue-500">© 2025 神戸お片付けサポートセンター. All Rights Reserved.</p>
+  <p class="mb-2">神戸市全9区対応｜遺品整理・ゴミ屋敷清掃・生前整理・特殊清掃の業者比較・紹介</p>
+  <p class="mb-4">対応エリア：<a href="/area/higashinada" class="underline hover:text-white">東灘区</a> / <a href="/area/nada" class="underline hover:text-white">灘区</a> / <a href="/area/chuo" class="underline hover:text-white">中央区</a> / <a href="/area/hyogo" class="underline hover:text-white">兵庫区</a> / <a href="/area/kita" class="underline hover:text-white">北区</a> / <a href="/area/nagata" class="underline hover:text-white">長田区</a> / <a href="/area/suma" class="underline hover:text-white">須磨区</a> / <a href="/area/tarumi" class="underline hover:text-white">垂水区</a> / <a href="/area/nishi" class="underline hover:text-white">西区</a></p>
+
+  <div class="max-w-2xl mx-auto border-t border-white/10 pt-4 mt-4">
+    <p class="text-blue-200/80 leading-relaxed mb-3">
+      当サイトは遺品整理業者ではなく、条件に合う業者を無料でご紹介する<strong class="text-blue-100">比較・紹介サービス</strong>です。
+      実際の作業およびご契約は、ご紹介先の業者との間で直接行っていただきます。
+      当サイトは、ご紹介した業者から<strong class="text-blue-100">紹介手数料を受け取る場合があります</strong>。
+    </p>
+    <nav class="flex flex-wrap justify-center gap-x-4 gap-y-1">
+      <a href="/operator" class="underline hover:text-white">運営者情報</a>
+      <a href="/privacy" class="underline hover:text-white">プライバシーポリシー</a>
+      <a href="/blog" class="underline hover:text-white">お役立ち記事</a>
+    </nav>
+  </div>
+  <p class="mt-4 text-blue-500">© 2026 神戸お片付けサポートセンター. All Rights Reserved.</p>
 </footer>
 
 <!-- STICKY CTA (スマホ) -->

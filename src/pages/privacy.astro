@@ -1,0 +1,99 @@
+---
+import Layout from '../layouts/Layout.astro'
+
+const title = 'プライバシーポリシー｜神戸お片付けサポートセンター'
+const description = '神戸お片付けサポートセンターにおける個人情報の取り扱い、提携業者への情報提供、アクセス解析ツールの利用について説明しています。'
+
+const schema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebPage',
+    name: title,
+    description,
+    url: 'https://kobe-kataduke-support.jp/privacy',
+    publisher: { '@id': 'https://kobe-kataduke-support.jp/#org' },
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'ホーム', item: 'https://kobe-kataduke-support.jp/' },
+      { '@type': 'ListItem', position: 2, name: 'プライバシーポリシー', item: 'https://kobe-kataduke-support.jp/privacy' },
+    ],
+  },
+]
+---
+<Layout title={title} description={description} schema={schema}>
+  <main class="max-w-3xl mx-auto px-5 py-12">
+    <nav class="text-xs text-gray-500 mb-6" aria-label="パンくず">
+      <a href="/" class="hover:underline">ホーム</a> ＞ プライバシーポリシー
+    </nav>
+
+    <h1 class="text-2xl md:text-3xl font-black text-[#081a38] mb-6">プライバシーポリシー</h1>
+    <p class="text-sm text-gray-700 leading-relaxed mb-8">
+      神戸お片付けサポートセンター（以下「当サイト」）は、お客様の個人情報を適切に取り扱います。
+      当サイトは業者をご紹介する窓口サービスであり、その性質上、ご相談内容を提携業者へ共有する場合があります。
+      その範囲を以下に明記します。
+    </p>
+
+    {[
+      {
+        h: '1. 取得する情報',
+        b: ['ご相談時にお客様からご提供いただく情報（お名前、ご連絡先、対象物件の所在地・間取り、ご希望内容、現況の写真など）',
+            'アクセス解析により自動的に取得される情報（閲覧ページ、参照元、ブラウザ・端末の種別など）'],
+      },
+      {
+        h: '2. 利用目的',
+        b: ['ご相談内容に適した業者を選定し、ご紹介するため',
+            'ご紹介先の業者からお客様へご連絡・お見積りを行うため',
+            'お問い合わせへの回答、ご連絡のため',
+            'サイトの改善、コンテンツの品質向上のため'],
+      },
+      {
+        h: '3. 提携業者への情報提供',
+        b: ['当サイトは、業者をご紹介する目的の範囲内で、お客様からお預かりした情報を提携業者へ提供します。',
+            '提供する情報は、お見積りおよびご連絡に必要な範囲に限ります。',
+            '当サイトは、ご紹介した業者から紹介手数料を受け取る場合があります。この手数料はお客様のご負担ではありません。',
+            'ご紹介を希望されない業者がある場合は、あらかじめお申し出ください。'],
+      },
+      {
+        h: '4. 第三者への開示',
+        b: ['前項の提携業者への提供を除き、法令に基づく場合等の正当な理由がある場合を除いて、お客様の同意なく第三者へ開示することはありません。'],
+      },
+      {
+        h: '5. アクセス解析ツールについて',
+        b: ['当サイトは、サイトの利用状況を把握するためにGoogleアナリティクスを利用する場合があります。',
+            'このツールはCookieを使用して情報を収集しますが、個人を特定する情報は含まれません。',
+            'ブラウザの設定によりCookieを無効にすることで、収集を拒否することができます。'],
+      },
+      {
+        h: '6. 個人情報の管理',
+        b: ['お預かりした個人情報は、漏えい・滅失・毀損を防ぐため、必要かつ適切な措置を講じて管理します。',
+            '利用目的を達成し、保存の必要がなくなった情報は、適切な方法で廃棄します。'],
+      },
+      {
+        h: '7. 開示・訂正・削除のご請求',
+        b: ['お客様ご本人からの、個人情報の開示・訂正・削除のご請求には、ご本人であることを確認のうえ、速やかに対応いたします。',
+            'ご請求は、当サイトのお問い合わせ窓口（LINE）よりお申し出ください。'],
+      },
+      {
+        h: '8. 本ポリシーの変更',
+        b: ['本ポリシーの内容は、法令の変更やサービス内容の変更に応じて、予告なく改定する場合があります。',
+            '改定後の内容は、当ページに掲載した時点から適用されます。'],
+      },
+    ].map((s) => (
+      <section class="mb-7">
+        <h2 class="text-lg font-black text-[#081a38] mb-3">{s.h}</h2>
+        <ul class="list-disc list-inside space-y-2 text-sm text-gray-700 leading-relaxed">
+          {s.b.map((line) => <li>{line}</li>)}
+        </ul>
+      </section>
+    ))}
+
+    <p class="text-xs text-gray-500 mb-8">制定日：2026年9月4日</p>
+
+    <div class="text-center">
+      <a href="/" class="inline-block bg-[#081a38] text-white font-bold rounded-xl px-6 py-3 text-sm hover:opacity-90">トップページへ戻る</a>
+    </div>
+  </main>
+</Layout>
