@@ -92,14 +92,17 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
 
   const name = clean(data.name, 100)
   const phone = clean(data.phone, 40)
+  const email = clean(data.email, 200)
   const roomType = clean(data.roomType, 60)
   const service = clean(data.service, 200)
   const message = clean(data.message, 2000)
 
   // 5. 必須項目
+  // 返信手段が1つも無いと連絡できないため、電話かメールのどちらかを必須にする
   const errors: string[] = []
   if (!name) errors.push('お名前をご入力ください。')
-  if (!phone) errors.push('ご連絡先をご入力ください。')
+  if (!phone && !email) errors.push('お電話番号またはメールアドレスの、どちらか一方をご入力ください。')
+  if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) errors.push('メールアドレスの形式をご確認ください。')
   if (!roomType) errors.push('間取りを選択してください。')
   if (errors.length) return json({ ok: false, error: errors.join('\n') }, 400)
 
@@ -119,7 +122,8 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
 
   const rows: [string, string][] = [
     ['お名前', name],
-    ['ご連絡先', phone],
+    ['お電話番号', phone || '（未記入）'],
+    ['メールアドレス', email || '（未記入）'],
     ['間取り', roomType],
     ['ご希望の作業', service || '（未選択）'],
     ['ご相談内容', message || '（記入なし）'],
@@ -131,7 +135,8 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
     const result = await resend.emails.send({
       from,
       to,
-      replyTo: undefined,
+      // メールアドレスの記入があれば、受信メールの「返信」でそのまま返せるようにする
+      replyTo: email || undefined,
       subject: `【見積もり相談】${name} 様（${roomType}）`,
       text: rows.map(([k, v]) => `${k}: ${v}`).join('\n'),
       html: `

@@ -408,9 +408,20 @@ const categoryLabels: Record<string, string> = {
           <input type="text" id="name" name="name" required placeholder="例：山田 太郎" class="w-full bg-[#0f2d5c] border border-white/20 rounded-xl px-4 py-3 text-white placeholder-blue-300/50 text-sm focus:outline-none focus:ring-2 focus:ring-[#e8a900]"/>
         </div>
         <div>
-          <label for="phone" class="block text-sm font-bold mb-1 text-blue-100">お電話番号 <span class="text-red-400">*</span></label>
-          <input type="tel" id="phone" name="phone" required placeholder="例：090-0000-0000" class="w-full bg-[#0f2d5c] border border-white/20 rounded-xl px-4 py-3 text-white placeholder-blue-300/50 text-sm focus:outline-none focus:ring-2 focus:ring-[#e8a900]"/>
+          <label for="phone" class="block text-sm font-bold mb-1 text-blue-100">お電話番号</label>
+          <input type="tel" id="phone" name="phone" placeholder="例：090-0000-0000" class="w-full bg-[#0f2d5c] border border-white/20 rounded-xl px-4 py-3 text-white placeholder-blue-300/50 text-sm focus:outline-none focus:ring-2 focus:ring-[#e8a900]"/>
         </div>
+      </div>
+
+      <div>
+        <label for="email" class="block text-sm font-bold mb-1 text-blue-100">
+          メールアドレス
+          <span class="text-blue-300 font-normal text-xs ml-1">（お電話番号とどちらか一方で結構です）</span>
+        </label>
+        <input type="email" id="email" name="email" inputmode="email" autocomplete="email" placeholder="例：example@example.com" class="w-full bg-[#0f2d5c] border border-white/20 rounded-xl px-4 py-3 text-white placeholder-blue-300/50 text-sm focus:outline-none focus:ring-2 focus:ring-[#e8a900]"/>
+        <p class="text-blue-300 text-xs mt-1.5 leading-relaxed">
+          ご返信の方法をお選びいただけます。日中お電話に出にくい方は、メールアドレスをご入力ください。
+        </p>
       </div>
       <div>
         <label for="message" class="block text-sm font-bold mb-1 text-blue-100">ご状況・ご要望 <span class="text-blue-300 font-normal text-xs ml-1">（任意）</span></label>
@@ -552,10 +563,13 @@ const categoryLabels: Record<string, string> = {
 
       const name = document.getElementById('name').value.trim();
       const phone = document.getElementById('phone').value.trim();
+      const email = document.getElementById('email').value.trim();
       const roomType = document.getElementById('roomType').value;
       const errors = [];
       if (!name) errors.push('お名前をご入力ください。');
-      if (!phone) errors.push('ご連絡先をご入力ください。');
+      // 返信手段が1つも無いと連絡できないため、電話かメールのどちらかを必須にする
+      if (!phone && !email) errors.push('お電話番号またはメールアドレスの、どちらか一方をご入力ください。');
+      if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) errors.push('メールアドレスの形式をご確認ください。');
       if (!roomType) errors.push('間取りを選択してください。');
       if (errors.length > 0) {
         errorMsg.innerHTML = errors.join('<br/>');
