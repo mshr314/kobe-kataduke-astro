@@ -142,14 +142,14 @@ const categoryLabels: Record<string, string> = {
   <div class="max-w-3xl mx-auto">
     <p class="text-center text-xs font-bold tracking-widest text-[#1a4480] mb-2 uppercase">こんなお悩みありませんか？</p>
     <h2 id="pain-heading" class="text-xl md:text-2xl font-black text-center text-[#081a38] mb-8">「急いで片付けたい…でも、どうすれば」<br/>と途方に暮れているあなたへ</h2>
+    <!-- 悩みは4つに絞る。ここは共感で足を止める場所であり、
+         長くすると本命の費用相場に到達する前に離脱するため。 -->
     <ul class="grid grid-cols-1 md:grid-cols-2 gap-4">
       {[
-        { icon: '😞', title: '他府県に住んでいて、実家に行けない', desc: '仕事や家族の都合で現地に行けず、実家の状況が気になって仕方ない…' },
-        { icon: '😰', title: 'ゴミ屋敷化してご近所の目が気になる', desc: '親が亡くなり数ヶ月…家の状態が悪化しご近所さんに申し訳ない気持ちが…' },
-        { icon: '💸', title: '業者に頼んだら高額請求されそうで怖い', desc: 'ニュースで見るような後から追加料金の請求が怖くて、一歩踏み出せない…' },
-        { icon: '🏔️', title: '坂道・細路地で大型トラックが入れない', desc: '灘区や北区など神戸特有の地形で、対応できる業者がなかなか見つからない…' },
-        { icon: '⏰', title: '家の売却・明け渡しまで時間がない', desc: '不動産会社から期限を告げられ、早急に片付けなければならない状況…' },
-        { icon: '💔', title: '大切な遺品を粗末に扱われたくない', desc: '故人の思い出の品々を、ただのゴミとして処分されてしまいそうで不安…' },
+        { icon: '😞', title: '他府県に住んでいて、実家に行けない', desc: '現地に行けず、実家の状況が気になって仕方ない…' },
+        { icon: '💸', title: '高額請求されそうで怖い', desc: '後から追加料金を請求されないか不安で、一歩踏み出せない…' },
+        { icon: '🏔️', title: '坂道・細路地でトラックが入れない', desc: '神戸特有の地形で、対応できる業者が見つからない…' },
+        { icon: '⏰', title: '売却・明け渡しまで時間がない', desc: '期限を告げられ、早急に片付けなければならない…' },
       ].map(p => (
         <li class="bg-white rounded-2xl p-5 shadow-sm border-l-4 border-red-400 flex gap-3">
           <span class="text-red-400 text-2xl mt-0.5 flex-shrink-0">{p.icon}</span>
@@ -158,12 +158,62 @@ const categoryLabels: Record<string, string> = {
       ))}
     </ul>
     <div class="mt-8 bg-[#081a38] text-white rounded-2xl p-6 text-center">
-      <p class="font-black text-lg md:text-xl mb-3">そのお悩み、すべて<span class="text-[#f5c842]">解決できます。</span></p>
-      <p class="text-blue-100 text-sm mb-5">神戸市で10年以上。地元を熟知した専門スタッフが、あなたの状況に合わせて柔軟に対応します。</p>
+      <p class="font-black text-lg md:text-xl mb-3">条件に合う業者を、<span class="text-[#f5c842]">無料でお探しします。</span></p>
+      <p class="text-blue-100 text-sm mb-5">お住まいの区・間取り・ご希望の時期をお送りいただければ、対応できる業者をご案内します。</p>
       <a href="https://line.me/R/ti/p/@622cifkz" target="_blank" rel="noopener" class="cta-btn tel-link text-base md:text-lg px-8 py-4">
-        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M3 5.5a15.5 15.5 0 0015 15l2.5-2.5-3-3-2 2a11 11 0 01-7-7l2-2-3-3L3 5.5z"/></svg>
-        💬 LINEで今すぐ無料相談
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 flex-shrink-0" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2C6.48 2 2 5.82 2 10.5c0 2.67 1.5 5.05 3.86 6.6-.13.5-.7 2.5-.72 2.66 0 0-.02.12.06.17.08.05.18.02.18.02.24-.03 2.8-1.84 3.24-2.15.45.06.9.1 1.38.1 5.52 0 10-3.82 10-8.5S17.52 2 12 2z"/></svg>
+        LINEで今すぐ無料相談
       </a>
+    </div>
+  </div>
+</section>
+<div class="section-divider"></div>
+
+<!-- PRICING -->
+<section class="bg-slate-50 py-12 px-5" aria-labelledby="pricing-heading">
+  <div class="max-w-3xl mx-auto">
+    <p class="text-center text-xs font-bold tracking-widest text-[#1a4480] mb-2 uppercase">料金案内</p>
+    <h2 id="pricing-heading" class="text-xl md:text-2xl font-black text-center text-[#081a38] mb-3">間取り別 <span class="text-[#c98700]">費用相場の目安</span></h2>
+    <p class="text-center text-gray-500 text-sm mb-8">遺品整理の一般的な費用相場です。実際の金額は、業者・物量・搬出条件により異なります。</p>
+    <div class="overflow-x-auto rounded-2xl shadow-md">
+      <table class="w-full bg-white text-sm md:text-base border-collapse">
+        <caption class="sr-only">遺品整理の間取り別 費用相場の目安</caption>
+        <thead>
+          <tr class="bg-[#081a38] text-white">
+            <th scope="col" class="py-4 px-4 text-left font-black">間取り</th>
+            <th scope="col" class="py-4 px-4 text-center font-black">参考作業時間</th>
+            <th scope="col" class="py-4 px-4 text-right font-black text-[#f5c842]">費用相場（目安）</th>
+          </tr>
+        </thead>
+        <tbody>
+          {[
+            { room: '1K・1R', time: '2〜4時間程度', price: '30,000円〜' },
+            { room: '1DK・1LDK', time: '4〜6時間程度', price: '80,000円〜' },
+            { room: '2DK・2LDK', time: '1日程度', price: '120,000円〜' },
+            { room: '3DK・3LDK', time: '1〜2日程度', price: '150,000円〜' },
+            { room: '4LDK・一戸建て', time: '2〜3日程度', price: '250,000円〜' },
+          ].map(r => (
+            <tr class="border-b border-gray-100 hover:bg-[#f0f4fa] transition-colors">
+              <td class="py-4 px-4 font-bold text-[#081a38]">{r.room}</td>
+              <td class="py-4 px-4 text-center text-gray-600">{r.time}</td>
+              <td class="py-4 px-4 text-right font-black text-[#081a38]">{r.price}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+    <div class="mt-4 bg-amber-50 border border-amber-300 rounded-xl p-4 text-sm text-amber-800">
+      <p class="font-bold mb-1">⚠️ 費用に関するご注意</p>
+      <ul class="list-disc list-inside space-y-1 text-amber-700">
+        <li>上記は<strong>一般的な相場の目安</strong>であり、特定の業者の料金を保証するものではありません。</li>
+        <li>荷物の量・内容・状態、階数やエレベーターの有無などの搬出条件により変動します。</li>
+        <li>買取による費用の相殺に対応するかは、業者によって異なります。</li>
+        <li>ゴミ屋敷清掃・特殊清掃は、状況により別途お見積りとなります。</li>
+        <li><strong>正確な金額は、必ず現地見積もりでご確認ください。</strong></li>
+      </ul>
+    </div>
+    <div class="mt-6 text-center">
+      <a href="https://line.me/R/ti/p/@622cifkz" target="_blank" rel="noopener" class="cta-btn tel-link text-lg px-10 py-4 mx-auto">💬 LINEで無料見積りを依頼</a>
     </div>
   </div>
 </section>
@@ -262,55 +312,6 @@ const categoryLabels: Record<string, string> = {
 </section>
 <div class="section-divider"></div>
 
-<!-- PRICING -->
-<section class="bg-slate-50 py-12 px-5" aria-labelledby="pricing-heading">
-  <div class="max-w-3xl mx-auto">
-    <p class="text-center text-xs font-bold tracking-widest text-[#1a4480] mb-2 uppercase">料金案内</p>
-    <h2 id="pricing-heading" class="text-xl md:text-2xl font-black text-center text-[#081a38] mb-3">間取り別 <span class="text-[#c98700]">費用相場の目安</span></h2>
-    <p class="text-center text-gray-500 text-sm mb-8">遺品整理の一般的な費用相場です。実際の金額は、業者・物量・搬出条件により異なります。</p>
-    <div class="overflow-x-auto rounded-2xl shadow-md">
-      <table class="w-full bg-white text-sm md:text-base border-collapse">
-        <caption class="sr-only">遺品整理の間取り別 費用相場の目安</caption>
-        <thead>
-          <tr class="bg-[#081a38] text-white">
-            <th scope="col" class="py-4 px-4 text-left font-black">間取り</th>
-            <th scope="col" class="py-4 px-4 text-center font-black">参考作業時間</th>
-            <th scope="col" class="py-4 px-4 text-right font-black text-[#f5c842]">費用相場（目安）</th>
-          </tr>
-        </thead>
-        <tbody>
-          {[
-            { room: '1K・1R', time: '2〜4時間程度', price: '30,000円〜' },
-            { room: '1DK・1LDK', time: '4〜6時間程度', price: '80,000円〜' },
-            { room: '2DK・2LDK', time: '1日程度', price: '120,000円〜' },
-            { room: '3DK・3LDK', time: '1〜2日程度', price: '150,000円〜' },
-            { room: '4LDK・一戸建て', time: '2〜3日程度', price: '250,000円〜' },
-          ].map(r => (
-            <tr class="border-b border-gray-100 hover:bg-[#f0f4fa] transition-colors">
-              <td class="py-4 px-4 font-bold text-[#081a38]">{r.room}</td>
-              <td class="py-4 px-4 text-center text-gray-600">{r.time}</td>
-              <td class="py-4 px-4 text-right font-black text-[#081a38]">{r.price}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-    <div class="mt-4 bg-amber-50 border border-amber-300 rounded-xl p-4 text-sm text-amber-800">
-      <p class="font-bold mb-1">⚠️ 費用に関するご注意</p>
-      <ul class="list-disc list-inside space-y-1 text-amber-700">
-        <li>上記は<strong>一般的な相場の目安</strong>であり、特定の業者の料金を保証するものではありません。</li>
-        <li>荷物の量・内容・状態、階数やエレベーターの有無などの搬出条件により変動します。</li>
-        <li>買取による費用の相殺に対応するかは、業者によって異なります。</li>
-        <li>ゴミ屋敷清掃・特殊清掃は、状況により別途お見積りとなります。</li>
-        <li><strong>正確な金額は、必ず現地見積もりでご確認ください。</strong></li>
-      </ul>
-    </div>
-    <div class="mt-6 text-center">
-      <a href="https://line.me/R/ti/p/@622cifkz" target="_blank" rel="noopener" class="cta-btn tel-link text-lg px-10 py-4 mx-auto">💬 LINEで無料見積りを依頼</a>
-    </div>
-  </div>
-</section>
-<div class="section-divider"></div>
 
 <!-- BLOG PREVIEW -->
 <section class="bg-white py-12 px-5" aria-labelledby="blog-heading">

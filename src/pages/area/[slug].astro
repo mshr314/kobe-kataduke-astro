@@ -1,6 +1,7 @@
 ---
 import Layout from '../../layouts/Layout.astro'
 import { WARDS, getWard, PRICE_GUIDE } from '../../data/wards'
+import { fetchBlogPosts } from '../../sanity/client'
 
 export const prerender = false
 
@@ -18,6 +19,15 @@ const description = `${ward.fullName}で遺品整理をお考えの方へ。費�
 
 // 他の区へのリンク（内部リンクで面を作る）
 const others = WARDS.filter((w) => w.slug !== ward.slug)
+
+// 区ページから記事への導線。区ページは検索流入の入口になる一方、
+// 記事へのリンクが無いと行き止まりになるため、費用や業者選びの記事へ送る。
+let relatedPosts: any[] = []
+try {
+  relatedPosts = (await fetchBlogPosts() || []).slice(0, 4)
+} catch (e) {
+  // 記事が取れなくても区ページは表示する
+}
 
 const faq = [
   {
@@ -211,6 +221,29 @@ const LINE = 'https://line.me/R/ti/p/@622cifkz'
         </a>
       </div>
     </section>
+
+    <!-- 関連記事（区ページを行き止まりにしない） -->
+    {relatedPosts.length > 0 && (
+      <section class="bg-slate-50 px-5 py-10">
+        <div class="max-w-3xl mx-auto">
+          <h2 class="text-lg font-black text-[#081a38] mb-1">費用や業者選びについて詳しく</h2>
+          <p class="text-gray-500 text-sm mb-5">{ward.name}に限らず、依頼前に知っておきたいことをまとめています。</p>
+          <ul class="space-y-2">
+            {relatedPosts.map((p: any) => (
+              <li>
+                <a href={`/blog/${p.slug?.current}`} class="block bg-white border border-slate-200 rounded-xl px-4 py-3 hover:border-[#1a4480] hover:bg-[#f0f4fa] transition-colors">
+                  <span class="block text-sm font-bold text-[#1a4480] leading-snug">{p.title}</span>
+                  {p.excerpt && <span class="block text-gray-500 text-xs mt-1 leading-relaxed">{p.excerpt.slice(0, 60)}…</span>}
+                </a>
+              </li>
+            ))}
+          </ul>
+          <p class="mt-4 text-center">
+            <a href="/blog" class="text-[#2d5fa0] font-bold text-sm hover:underline">お役立ち記事をすべて見る →</a>
+          </p>
+        </div>
+      </section>
+    )}
 
     <!-- 他の区 -->
     <section class="bg-white px-5 py-10">
