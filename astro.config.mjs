@@ -22,6 +22,14 @@ export default defineConfig({
   ],
   output: 'server',
   adapter: vercel(),
+  security: {
+    // Astro標準のCSRF保護は Origin を site（kobe-kataduke-support.jp）と
+    // 照合するため、独自ドメイン接続前の *.vercel.app からの送信が
+    // すべて拒否されてしまう。
+    // 参照元の検証は /api/estimate 側で許可ホストを明示して行っているため、
+    // ここでは無効化する（独自ドメイン接続後も API 側の検証は有効なまま）。
+    checkOrigin: false,
+  },
   vite: {
     plugins: [tailwindcss()],
   },
