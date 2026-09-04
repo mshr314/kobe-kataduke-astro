@@ -1,34 +1,20 @@
 ---
 import Layout from '../layouts/Layout.astro'
-import { fetchTestimonials, fetchBlogPosts } from '../sanity/client'
+import { fetchBlogPosts } from '../sanity/client'
 
-let testimonials: any[] = []
+// 体験談は掲載しない。実績がない段階で「お客様の声」を載せると
+// 事実と異なる表示になるため、ご利用の流れで信頼を担保する。
 let blogPosts: any[] = []
 
 try {
-  [testimonials, blogPosts] = await Promise.all([
-    fetchTestimonials(),
-    fetchBlogPosts(),
-  ])
+  blogPosts = await fetchBlogPosts()
 } catch (e) {
-  // Sanity未接続時はフォールバックを使用
+  // Sanityが一時的に落ちていても、記事なしで描画する
 }
 
-const defaultTestimonials = [
-  { name: 'K.M. 様', profile: '50代・大阪市在住', area: '神戸市北区の実家 / 遺品整理 3LDK', rating: 5, content: '「母が亡くなり、神戸に残した実家の遺品整理をお願いしました。私は大阪在住で立ち会えなかったのですが、作業中の写真をこまめにLINEで送ってくれて、本当に安心できました。遺品も丁寧に扱っていただき、感謝しかありません。」' },
-  { name: 'T.Y. 様', profile: '48歳・神戸市垂水区', area: '神戸市長田区 / ゴミ屋敷清掃 一戸建て', rating: 5, content: '「父の家がゴミ屋敷状態になっていて、どこに頼めばいいかわからず途方に暮れていました。電話したら翌日すぐに来ていただき、嫌な顔一つせず作業してくれました。見積り通りの金額で安心しました。」' },
-  { name: 'S.N. 様', profile: '53歳・兵庫県三田市', area: '神戸市灘区 / 遺品整理 2LDK＋買取', rating: 5, content: '「仏壇や着物、貴金属など価値があるかわからないものがたくさんありましたが、丁寧に査定していただき、買取金額をそのまま作業費から引いてくれました。思ったより安くなり驚きました。」' },
-  { name: 'H.F. 様', profile: '45歳・神戸市須磨区', area: '神戸市須磨区 / 生前整理 1LDK', rating: 5, content: '「急に明け渡しの期限が決まり、2日後に来てもらえるか問い合わせたら、翌日に対応していただけました。坂の多い須磨の住宅地でも問題なく作業してもらえて、本当に助かりました。」' },
-]
-
-const defaultBlogPosts = [
-  { slug: { current: '#' }, publishedAt: '2026-03-01', title: '三宮でおすすめの遺品整理業者5選【2026年最新】', category: 'area-guide', excerpt: '三宮エリアで実績のある遺品整理業者を徹底比較。料金・対応エリア・資格・口コミを元にランキング形式でご紹介します。' },
-  { slug: { current: '#' }, publishedAt: '2026-02-15', title: '神戸市のゴミ屋敷清掃にかかる費用の相場と業者選びのポイント', category: 'gomiyashiki', excerpt: 'ゴミ屋敷清掃の費用相場は間取りや荷物量によって大きく異なります。神戸市内の事例を元に、適正価格の見極め方を解説します。' },
-  { slug: { current: '#' }, publishedAt: '2026-02-01', title: '遺品整理士とはどんな資格？神戸で依頼するメリットを解説', category: 'isan-seiri', excerpt: '「遺品整理士」という認定資格をご存知ですか？資格の内容、取得方法、メリットをわかりやすく解説します。' },
-]
-
-const displayTestimonials = testimonials.length > 0 ? testimonials : defaultTestimonials
-const displayBlogPosts = blogPosts.length > 0 ? blogPosts : defaultBlogPosts
+// 実在しない記事のフォールバックは置かない（リンク先が '#' になり、
+// 存在しない記事があるように見えてしまうため）
+const displayBlogPosts = blogPosts
 
 // 当サイトは施工業者ではなく「業者を比較・紹介するサービス」のため、
 // LocalBusiness（実店舗・施工事業者）ではなく Organization + Service で表現する。
@@ -100,18 +86,17 @@ const categoryLabels: Record<string, string> = {
 
 <!-- HEADER -->
 <header class="bg-[#081a38] sticky top-0 z-50 shadow-lg">
-  <div class="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between gap-2">
-    <div class="flex flex-col leading-tight">
-      <span class="text-[#f5c842] font-black text-lg md:text-xl tracking-tight">神戸お片付けサポートセンター</span>
-      <span class="text-blue-200 text-xs mt-0.5">遺品整理・ゴミ屋敷清掃の専門窓口</span>
+  <!-- スマホでは1行に収める。ロゴの折返しとバッジの重なりを避け、
+       ファーストビューの可視領域を確保する。 -->
+  <div class="max-w-5xl mx-auto px-4 py-2.5 flex items-center justify-between gap-3">
+    <div class="flex flex-col leading-tight min-w-0">
+      <span class="text-[#f5c842] font-black text-[15px] md:text-xl tracking-tight truncate">神戸お片付けサポートセンター</span>
+      <span class="hidden md:block text-blue-200 text-xs mt-0.5">遺品整理・ゴミ屋敷清掃の専門窓口</span>
     </div>
-    <div class="flex flex-col items-end gap-1">
-      <span class="text-green-400 text-xs font-bold tracking-wide">✅ 24時間受付・年中無休</span>
-      <a href="https://line.me/R/ti/p/@622cifkz" target="_blank" rel="noopener" class="cta-btn tel-link text-sm md:text-base px-5 py-2.5">
-        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M3 5.5a15.5 15.5 0 0015 15l2.5-2.5-3-3-2 2a11 11 0 01-7-7l2-2-3-3L3 5.5z"/></svg>
-        <span class="font-black">LINEで無料相談</span>
-      </a>
-    </div>
+    <a href="https://line.me/R/ti/p/@622cifkz" target="_blank" rel="noopener" class="cta-btn tel-link flex-none text-[13px] md:text-base px-4 md:px-5 py-2 md:py-2.5">
+      <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 flex-shrink-0" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2C6.48 2 2 5.82 2 10.5c0 2.67 1.5 5.05 3.86 6.6-.13.5-.7 2.5-.72 2.66 0 0-.02.12.06.17.08.05.18.02.18.02.24-.03 2.8-1.84 3.24-2.15.45.06.9.1 1.38.1 5.52 0 10-3.82 10-8.5S17.52 2 12 2z"/></svg>
+      <span class="font-black whitespace-nowrap">LINE相談</span>
+    </a>
   </div>
 </header>
 
@@ -184,38 +169,43 @@ const categoryLabels: Record<string, string> = {
 </section>
 <div class="section-divider"></div>
 
-<!-- TESTIMONIALS -->
-<section class="bg-white py-12 px-5" aria-labelledby="testimonials-heading">
+<!-- ご相談から作業までの流れ
+     紹介サイトでは「誰と契約するのか」が分かりにくく、そこが最大の不安になる。
+     体験談ではなく、手続きの透明性で信頼を得る構成にしている。 -->
+<section class="bg-white py-12 px-5" aria-labelledby="flow-heading">
   <div class="max-w-3xl mx-auto">
-    <p class="text-center text-xs font-bold tracking-widest text-[#1a4480] mb-2 uppercase">お客様の声</p>
-    <h2 id="testimonials-heading" class="text-xl md:text-2xl font-black text-center text-[#081a38] mb-2">実際にご依頼いただいた<span class="text-[#c98700]">お客様の声</span></h2>
-    <p class="text-center text-gray-500 text-sm mb-8">神戸市内のご依頼者様から寄せられた感想の一部をご紹介します。</p>
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-      {displayTestimonials.slice(0, 4).map((t: any) => (
-        <article class="bg-slate-50 rounded-2xl p-5 border border-slate-100 shadow-sm">
-          <div class="flex items-center gap-1 text-[#e8a900] text-base mb-2">{'★'.repeat(t.rating || 5)}</div>
-          <p class="text-gray-700 text-sm leading-relaxed mb-4">{t.content}</p>
-          <div class="flex items-center gap-3">
-            <div class="bg-[#b3c7e9] rounded-full w-10 h-10 flex items-center justify-center text-[#1a4480] font-black text-sm flex-shrink-0">{t.name?.charAt(0) || 'K'}</div>
-            <div>
-              <p class="font-bold text-[#081a38] text-sm">{t.name}</p>
-              <p class="text-gray-400 text-xs">{t.area || t.profile}</p>
-            </div>
+    <p class="text-center text-xs font-bold tracking-widest text-[#1a4480] mb-2 uppercase">ご利用の流れ</p>
+    <h2 id="flow-heading" class="text-xl md:text-2xl font-black text-center text-[#081a38] mb-2">ご相談から作業まで、<span class="text-[#c98700]">4ステップ</span></h2>
+    <p class="text-center text-gray-500 text-sm mb-8">ご相談・業者のご紹介は無料です。費用が発生するのは、業者と直接ご契約された後だけです。</p>
+
+    <ol class="space-y-4">
+      {[
+        { no: '01', title: 'LINEでご相談', desc: 'お住まいの区、間取り、ご希望の時期をお送りください。写真があれば、より具体的にご案内できます。24時間受付、返信は最短即日です。', cost: '無料' },
+        { no: '02', title: '条件に合う業者をご紹介', desc: 'ご状況に対応できる業者を、当サイトからご案内します。ご希望に応じて複数社をご紹介し、相見積もりで比較していただけます。', cost: '無料' },
+        { no: '03', title: '業者による現地見積もり', desc: '物量と搬出条件は現場を見なければ分かりません。業者が直接訪問し、お見積りをご提示します。この時点でもお断りいただけます。', cost: '見積もりは無料の業者をご紹介' },
+        { no: '04', title: '業者と直接ご契約・作業', desc: '内容にご納得いただけたら、業者とお客様の間で直接ご契約いただきます。当サイトは契約の当事者にはなりません。', cost: '料金は業者との契約に基づきます' },
+      ].map(s => (
+        <li class="flex gap-4 bg-[#f8fafc] rounded-2xl p-5 border border-slate-100">
+          <span class="flex-none w-10 h-10 rounded-full bg-[#0f2d5c] text-[#f5c842] font-black text-sm flex items-center justify-center">{s.no}</span>
+          <div class="flex-1">
+            <p class="font-black text-[#081a38] text-base mb-1">{s.title}</p>
+            <p class="text-gray-600 text-sm leading-relaxed">{s.desc}</p>
+            <p class="mt-2 inline-block bg-[#e8f3ea] text-[#1d7a3d] text-xs font-bold px-2.5 py-1 rounded">{s.cost}</p>
           </div>
-        </article>
+        </li>
       ))}
-    </div>
-    <div class="mt-8 bg-[#081a38] rounded-2xl p-5 flex flex-col sm:flex-row items-center justify-center gap-4 text-white text-center">
-      <div>
-        <p class="text-5xl font-black text-[#f5c842]">4.9</p>
-        <div class="text-[#f5c842] text-xl mt-1">★★★★★</div>
-        <p class="text-blue-200 text-xs mt-1">総合評価</p>
-      </div>
-      <div class="w-px h-16 bg-white/20 hidden sm:block"></div>
-      <div class="text-sm text-blue-100 leading-relaxed">
-        <p class="font-black text-white text-base mb-1">ご紹介先を選ぶときの基準</p>
-        <p>料金の明朗さ、必要な許認可の有無、対応の丁寧さ。<br/>この3点を満たす業者のみをご紹介しています。</p>
-      </div>
+    </ol>
+
+    <div class="mt-8 bg-[#081a38] rounded-2xl p-6 text-white">
+      <p class="font-black text-[#f5c842] text-base mb-3">ご紹介先を選ぶときの基準</p>
+      <ul class="space-y-2 text-sm text-blue-100 leading-relaxed">
+        <li class="flex gap-2"><span class="text-[#f5c842] flex-none">・</span><span>見積書に内訳があり、追加費用の条件が明示されていること</span></li>
+        <li class="flex gap-2"><span class="text-[#f5c842] flex-none">・</span><span>一般廃棄物の収集運搬について、必要な許可を得ているか、許可業者へ適正に委託していること</span></li>
+        <li class="flex gap-2"><span class="text-[#f5c842] flex-none">・</span><span>現地見積もりを行い、書面で契約すること</span></li>
+      </ul>
+      <p class="mt-4 text-xs text-blue-300 leading-relaxed">
+        資格や対応範囲は業者ごとに異なります。ご希望の条件があれば、ご相談時にお知らせください。
+      </p>
     </div>
   </div>
 </section>
@@ -452,7 +442,7 @@ const categoryLabels: Record<string, string> = {
 <section class="bg-[#081a38] py-12 px-5 text-white text-center" aria-label="お問い合わせ">
   <div class="max-w-2xl mx-auto">
     <p class="text-[#f5c842] font-black text-sm tracking-widest mb-3 uppercase">今すぐご相談ください</p>
-    <h2 class="text-2xl md:text-3xl font-black mb-4 leading-snug">一人で悩まないでください。<br/><span class="text-[#f5c842]">まず、お電話一本から。</span></h2>
+    <h2 class="text-2xl md:text-3xl font-black mb-4 leading-snug">一人で悩まないでください。<br/><span class="text-[#f5c842]">まず、メッセージ一通から。</span></h2>
     <p class="text-blue-100 text-sm mb-8 leading-relaxed">「どこに頼んでいいかわからない」「話を聞いてもらうだけでもいいですか？」<br/>そんなご連絡でも大歓迎です。プレッシャーなし、契約義務なし。</p>
     <a href="https://line.me/R/ti/p/@622cifkz" target="_blank" rel="noopener" class="cta-btn tel-link text-xl md:text-2xl py-6 px-10 w-full max-w-sm mx-auto flex">
       <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M3 5.5a15.5 15.5 0 0015 15l2.5-2.5-3-3-2 2a11 11 0 01-7-7l2-2-3-3L3 5.5z"/></svg>
@@ -484,7 +474,7 @@ const categoryLabels: Record<string, string> = {
 </footer>
 
 <!-- STICKY CTA (スマホ) -->
-<div class="sticky-cta md:hidden" role="complementary" aria-label="お電話CTAバナー">
+<div class="sticky-cta md:hidden" role="complementary" aria-label="LINE相談CTAバナー">
   <a href="https://line.me/R/ti/p/@622cifkz" target="_blank" rel="noopener" class="cta-btn tel-link text-lg py-4 w-full flex items-center justify-center gap-3">
     <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M3 5.5a15.5 15.5 0 0015 15l2.5-2.5-3-3-2 2a11 11 0 01-7-7l2-2-3-3L3 5.5z"/></svg>
     <div class="text-left">
