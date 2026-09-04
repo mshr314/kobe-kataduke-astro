@@ -408,19 +408,18 @@ const categoryLabels: Record<string, string> = {
           <input type="text" id="name" name="name" required placeholder="例：山田 太郎" class="w-full bg-[#0f2d5c] border border-white/20 rounded-xl px-4 py-3 text-white placeholder-blue-300/50 text-sm focus:outline-none focus:ring-2 focus:ring-[#e8a900]"/>
         </div>
         <div>
-          <label for="phone" class="block text-sm font-bold mb-1 text-blue-100">お電話番号</label>
+          <label for="phone" class="block text-sm font-bold mb-1 text-blue-100">お電話番号 <span class="text-blue-300 font-normal text-xs ml-1">（任意）</span></label>
           <input type="tel" id="phone" name="phone" placeholder="例：090-0000-0000" class="w-full bg-[#0f2d5c] border border-white/20 rounded-xl px-4 py-3 text-white placeholder-blue-300/50 text-sm focus:outline-none focus:ring-2 focus:ring-[#e8a900]"/>
         </div>
       </div>
 
       <div>
         <label for="email" class="block text-sm font-bold mb-1 text-blue-100">
-          メールアドレス
-          <span class="text-blue-300 font-normal text-xs ml-1">（お電話番号とどちらか一方で結構です）</span>
+          メールアドレス <span class="text-red-400">*</span>
         </label>
-        <input type="email" id="email" name="email" inputmode="email" autocomplete="email" placeholder="例：example@example.com" class="w-full bg-[#0f2d5c] border border-white/20 rounded-xl px-4 py-3 text-white placeholder-blue-300/50 text-sm focus:outline-none focus:ring-2 focus:ring-[#e8a900]"/>
+        <input type="email" id="email" name="email" required inputmode="email" autocomplete="email" placeholder="例：example@example.com" class="w-full bg-[#0f2d5c] border border-white/20 rounded-xl px-4 py-3 text-white placeholder-blue-300/50 text-sm focus:outline-none focus:ring-2 focus:ring-[#e8a900]"/>
         <p class="text-blue-300 text-xs mt-1.5 leading-relaxed">
-          ご返信の方法をお選びいただけます。日中お電話に出にくい方は、メールアドレスをご入力ください。
+          こちらのアドレス宛にご返信します。お間違いのないようご確認ください。
         </p>
       </div>
       <div>
@@ -438,8 +437,12 @@ const categoryLabels: Record<string, string> = {
       <div class="text-5xl mb-4">✅</div>
       <h3 class="font-black text-xl text-[#f5c842] mb-3">送信が完了しました！</h3>
       <p class="text-blue-100 text-sm leading-relaxed">
-        当サイトより<strong class="text-white">当日〜翌営業日中</strong>にご連絡し、<br class="hidden sm:block" />
+        ご入力のメールアドレス宛に、<strong class="text-white">当日〜翌営業日中</strong>にご返信し、<br class="hidden sm:block" />
         ご状況に合う業者をご案内します。
+      </p>
+      <p class="text-blue-300 text-xs mt-3 leading-relaxed">
+        迷惑メールフォルダに振り分けられることがあります。<br class="hidden sm:block" />
+        しばらく届かない場合は、そちらもご確認ください。
       </p>
       <p class="text-blue-300 text-xs mt-3 leading-relaxed">
         お急ぎの場合は、LINEからご連絡いただくとより早くご案内できます。
@@ -567,9 +570,9 @@ const categoryLabels: Record<string, string> = {
       const roomType = document.getElementById('roomType').value;
       const errors = [];
       if (!name) errors.push('お名前をご入力ください。');
-      // 返信手段が1つも無いと連絡できないため、電話かメールのどちらかを必須にする
-      if (!phone && !email) errors.push('お電話番号またはメールアドレスの、どちらか一方をご入力ください。');
-      if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) errors.push('メールアドレスの形式をご確認ください。');
+      // 返信はメールで行うため、メールアドレスを必須にする（電話番号は任意）
+      if (!email) errors.push('メールアドレスをご入力ください。');
+      else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) errors.push('メールアドレスの形式をご確認ください。');
       if (!roomType) errors.push('間取りを選択してください。');
       if (errors.length > 0) {
         errorMsg.innerHTML = errors.join('<br/>');

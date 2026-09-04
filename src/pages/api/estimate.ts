@@ -98,11 +98,11 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
   const message = clean(data.message, 2000)
 
   // 5. 必須項目
-  // 返信手段が1つも無いと連絡できないため、電話かメールのどちらかを必須にする
+  // 返信はメールで行うため、メールアドレスを必須にする（電話番号は任意）
   const errors: string[] = []
   if (!name) errors.push('お名前をご入力ください。')
-  if (!phone && !email) errors.push('お電話番号またはメールアドレスの、どちらか一方をご入力ください。')
-  if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) errors.push('メールアドレスの形式をご確認ください。')
+  if (!email) errors.push('メールアドレスをご入力ください。')
+  else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) errors.push('メールアドレスの形式をご確認ください。')
   if (!roomType) errors.push('間取りを選択してください。')
   if (errors.length) return json({ ok: false, error: errors.join('\n') }, 400)
 
