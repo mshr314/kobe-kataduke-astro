@@ -1,0 +1,36 @@
+---
+/**
+ * 神戸市9区ページへの回遊リンク。
+ * 記事を読んだ人を「自分の区」の情報へ送るための導線。
+ * 区ページ同士・記事→区ページを相互に結び、面で評価されるようにする。
+ */
+import { WARDS } from '../data/wards'
+
+interface Props {
+  /** この区は除外する（区ページ自身で使うとき） */
+  exclude?: string
+  heading?: string
+}
+
+const { exclude, heading = 'お住まいの区から探す' } = Astro.props
+const list = exclude ? WARDS.filter((w) => w.slug !== exclude) : WARDS
+---
+
+<nav class="mt-10" aria-label="区から探す">
+  <h2 class="text-base font-black text-[#081a38] mb-1">{heading}</h2>
+  <p class="text-gray-500 text-xs mb-4">
+    区ごとの費用相場・搬出時の注意点・回収の事情をまとめています。
+  </p>
+  <ul class="grid grid-cols-2 sm:grid-cols-3 gap-2">
+    {list.map((w) => (
+      <li>
+        <a
+          href={`/area/${w.slug}`}
+          class="block border border-gray-200 rounded-lg px-3 py-2.5 text-sm text-[#1a4480] font-bold hover:border-[#1a4480] hover:bg-[#f0f4fa] transition-colors"
+        >
+          {w.fullName}
+        </a>
+      </li>
+    ))}
+  </ul>
+</nav>
