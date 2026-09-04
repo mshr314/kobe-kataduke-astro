@@ -98,6 +98,26 @@ const categoryLabels: Record<string, string> = {
       <span class="font-black whitespace-nowrap">LINE相談</span>
     </a>
   </div>
+
+  <!-- 主要セクションへの導線。
+       スマホではヘッダーを高くしないよう、横スクロールする1行にする。 -->
+  <nav class="border-t border-white/10 bg-[#0a2044]" aria-label="サイト内の主要セクション">
+    <div class="max-w-5xl mx-auto overflow-x-auto no-scrollbar">
+      <ul class="flex items-center gap-1 px-3 md:px-4 whitespace-nowrap md:justify-center">
+        {[
+          { href: '#pricing-heading', label: '費用相場' },
+          { href: '#flow-heading', label: 'ご利用の流れ' },
+          { href: '#area-heading', label: '対応エリア' },
+          { href: '/blog', label: 'お役立ち記事' },
+          { href: '#faq-heading', label: 'よくある質問' },
+        ].map(n => (
+          <li>
+            <a href={n.href} class="block px-3 py-2.5 text-[13px] font-bold text-blue-100 hover:text-[#f5c842] transition-colors">{n.label}</a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </nav>
 </header>
 
 <!-- HERO -->

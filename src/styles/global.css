@@ -93,3 +93,14 @@ details[open] summary .chevron {
   background: linear-gradient(90deg, #1a4480, #e8a900, #1a4480);
   opacity: 0.6;
 }
+
+/* ========== ヘッダー内ナビ ========== */
+/* 横スクロールはさせるが、スクロールバーは出さない（1行の高さを保つため） */
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+.no-scrollbar::-webkit-scrollbar { display: none; }
+
+/* アンカー遷移時、sticky ヘッダーの下に見出しが潜り込まないようにする。
+   ヘッダー（ロゴ行＋ナビ行）の高さぶんの余白を確保する。 */
+[id$="-heading"], #estimate-form {
+  scroll-margin-top: 110px;
+}
