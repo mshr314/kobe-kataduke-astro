@@ -1,0 +1,227 @@
+---
+import Layout from '../../layouts/Layout.astro'
+import { WARDS, getWard, PRICE_GUIDE } from '../../data/wards'
+
+export const prerender = false
+
+const { slug } = Astro.params
+const ward = getWard(slug ?? '')
+
+if (!ward) {
+  return Astro.redirect('/')
+}
+
+const SITE = 'https://kobe-kataduke-support.jp'
+const pageUrl = `${SITE}/area/${ward.slug}`
+const title = `${ward.fullName}の遺品整理・ゴミ屋敷清掃｜費用相場と業者の選び方`
+const description = `${ward.fullName}で遺品整理をお考えの方へ。費用相場、${ward.name}特有の搬出事情、業者の選び方をまとめています。対応できる業者を無料で比較・ご紹介します。`
+
+// 他の区へのリンク（内部リンクで面を作る）
+const others = WARDS.filter((w) => w.slug !== ward.slug)
+
+const faq = [
+  {
+    q: `${ward.fullName}の遺品整理の費用はいくらくらいですか？`,
+    a: `間取りと物量によって変わります。1K・1Rで30,000円前後から、3DK・3LDKで150,000円前後、一戸建てでは250,000円を超えることもあります。${ward.name}は${ward.challenges[0]}ため、事前の現地見積もりで正確な金額をご確認ください。`,
+  },
+  {
+    q: `${ward.fullName}でも即日対応してもらえますか？`,
+    a: `業者の空き状況によります。当日中の対応が可能な業者もありますが、物量が多い場合や、搬出に人手が必要な現場では日程の調整が必要です。お急ぎの事情（明け渡し期限など）がある場合は、ご相談時にお伝えください。対応できる業者を優先してお探しします。`,
+  },
+  {
+    q: `立ち会いなしでも${ward.name}の実家を片付けてもらえますか？`,
+    a: `立ち会いなしに対応している業者もあります。その場合、鍵のお預かり方法を取り決めたうえで、作業前後の写真や動画で報告を受ける形が一般的です。対応可否は業者により異なるため、ご相談時にその旨をお伝えください。`,
+  },
+  {
+    q: '見積もりのあとに追加料金がかかることはありますか？',
+    a: '業者や契約内容によります。見積書に「追加料金の有無」と「どのような場合に発生するか」が明記されているかを必ずご確認ください。当サイトでは、見積書の内訳が明確な業者をご紹介するよう努めています。',
+  },
+  {
+    q: '紹介や相談に費用はかかりますか？',
+    a: 'ご相談・業者のご紹介は無料です。当サイトは、ご紹介した業者から紹介手数料を受け取ることで運営しています。お客様が当サイトへお支払いいただく費用はありません。',
+  },
+]
+
+const schema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Service',
+    name: `${ward.fullName}の遺品整理業者 比較・紹介`,
+    serviceType: '遺品整理業者の比較・紹介',
+    description,
+    provider: { '@id': `${SITE}/#org` },
+    areaServed: { '@type': 'AdministrativeArea', name: ward.fullName },
+    offers: {
+      '@type': 'Offer',
+      price: '0',
+      priceCurrency: 'JPY',
+      description: 'ご相談・業者のご紹介は無料です。作業費用は、実際に依頼される業者との契約に基づきます。',
+    },
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    '@id': `${pageUrl}#faq`,
+    mainEntity: faq.map((f) => ({
+      '@type': 'Question',
+      name: f.q,
+      acceptedAnswer: { '@type': 'Answer', text: f.a },
+    })),
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'ホーム', item: `${SITE}/` },
+      { '@type': 'ListItem', position: 2, name: '対応エリア', item: `${SITE}/area` },
+      { '@type': 'ListItem', position: 3, name: ward.fullName, item: pageUrl },
+    ],
+  },
+]
+
+const LINE = 'https://line.me/R/ti/p/@622cifkz'
+---
+<Layout title={title} description={description} canonical={pageUrl} schema={schema}>
+  <main class="pb-8">
+    <!-- HERO -->
+    <section class="bg-[#081a38] text-white px-5 py-10">
+      <div class="max-w-3xl mx-auto">
+        <nav class="text-xs text-blue-300 mb-4" aria-label="パンくず">
+          <a href="/" class="hover:underline">ホーム</a> ＞ <a href="/area" class="hover:underline">対応エリア</a> ＞ {ward.fullName}
+        </nav>
+        <div class="inline-block bg-[#e8a900] text-[#081a38] text-xs font-black px-3 py-1 rounded-full mb-4 tracking-wider">{ward.fullName}対応</div>
+        <h1 class="text-2xl md:text-3xl font-black leading-snug mb-4">
+          {ward.fullName}の遺品整理・ゴミ屋敷清掃<br/>
+          <span class="text-[#f5c842]">費用相場と、業者の選び方</span>
+        </h1>
+        <p class="text-blue-100 text-sm leading-relaxed mb-5">
+          {ward.name}に対応できる業者を、無料で比較してご紹介します。
+          ご相談・紹介は無料です。まずは現在の状況をお聞かせください。
+        </p>
+        <a href={LINE} target="_blank" rel="noopener" class="cta-btn inline-flex items-center gap-2 text-lg py-4 px-7 shadow-xl">
+          <span>LINEで無料相談する</span>
+        </a>
+        <p class="mt-4 text-[11px] text-blue-200/90 leading-relaxed">
+          当サイトは遺品整理業者ではなく、業者を無料でご紹介する窓口です。作業とご契約は、ご紹介先の業者と直接行っていただきます。
+        </p>
+      </div>
+    </section>
+
+    <!-- 結論先出し（AI検索の引用対象） -->
+    <section class="bg-slate-50 px-5 py-10">
+      <div class="max-w-3xl mx-auto">
+        <h2 class="text-xl font-black text-[#081a38] mb-4">{ward.fullName}で遺品整理を頼むとき、先に知っておきたいこと</h2>
+        <ul class="space-y-3 text-sm text-gray-700 leading-relaxed">
+          <li class="flex gap-3"><span class="text-[#e8a900] font-black">✓</span><span><strong>費用の目安は1Kで30,000円〜、一戸建てで250,000円〜</strong>。物量と搬出条件で変わります</span></li>
+          <li class="flex gap-3"><span class="text-[#e8a900] font-black">✓</span><span><strong>{ward.name}は{ward.challenges[0]}</strong>という特徴があります</span></li>
+          <li class="flex gap-3"><span class="text-[#e8a900] font-black">✓</span><span><strong>相見積もりを2〜3社</strong>取ると、料金と作業範囲の違いが分かります</span></li>
+          <li class="flex gap-3"><span class="text-[#e8a900] font-black">✓</span><span><strong>見積書に「追加料金の条件」が書かれているか</strong>を必ず確認してください</span></li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- 区の特徴 -->
+    <section class="bg-white px-5 py-10">
+      <div class="max-w-3xl mx-auto">
+        <h2 class="text-xl font-black text-[#081a38] mb-4">{ward.fullName}の住宅事情と、片付けで起きやすいこと</h2>
+        <p class="text-sm text-gray-700 leading-relaxed mb-5">{ward.character}</p>
+        <div class="bg-amber-50 border border-amber-200 rounded-xl p-5">
+          <p class="font-bold text-amber-900 text-sm mb-3">{ward.name}の現場で、特に注意が必要な点</p>
+          <ul class="list-disc list-inside space-y-2 text-sm text-amber-800">
+            {ward.challenges.map((c) => <li>{c}</li>)}
+          </ul>
+        </div>
+        <p class="text-xs text-gray-500 mt-4 leading-relaxed">
+          主な対応地域：{ward.areas.join('・')}／最寄り駅：{ward.stations.join('・')}
+        </p>
+      </div>
+    </section>
+
+    <!-- 費用相場 -->
+    <section class="bg-slate-50 px-5 py-10">
+      <div class="max-w-3xl mx-auto">
+        <h2 class="text-xl font-black text-[#081a38] mb-2">{ward.fullName}の遺品整理 費用相場</h2>
+        <p class="text-sm text-gray-500 mb-5">一般的な相場の目安です。実際の金額は業者・物量・搬出条件により異なります。</p>
+        <div class="overflow-x-auto rounded-2xl shadow-sm">
+          <table class="w-full bg-white text-sm border-collapse">
+            <caption class="sr-only">{ward.fullName}の遺品整理 間取り別 費用相場</caption>
+            <thead>
+              <tr class="bg-[#081a38] text-white">
+                <th scope="col" class="py-3 px-4 text-left font-black">間取り</th>
+                <th scope="col" class="py-3 px-4 text-center font-black">参考作業時間</th>
+                <th scope="col" class="py-3 px-4 text-right font-black text-[#f5c842]">費用相場</th>
+              </tr>
+            </thead>
+            <tbody>
+              {PRICE_GUIDE.map((r) => (
+                <tr class="border-b border-gray-100 last:border-b-0">
+                  <td class="py-3 px-4 font-bold text-[#081a38]">{r.room}</td>
+                  <td class="py-3 px-4 text-center text-gray-600">{r.time}</td>
+                  <td class="py-3 px-4 text-right font-black text-[#081a38]">{r.price}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <p class="text-xs text-gray-500 mt-3">※ 上記は相場の目安であり、特定の業者の料金を保証するものではありません。正確な金額は現地見積もりでご確認ください。</p>
+      </div>
+    </section>
+
+    <!-- 業者の選び方 -->
+    <section class="bg-white px-5 py-10">
+      <div class="max-w-3xl mx-auto">
+        <h2 class="text-xl font-black text-[#081a38] mb-5">{ward.name}で業者を選ぶときの4つの確認点</h2>
+        <ol class="space-y-4 text-sm text-gray-700 leading-relaxed">
+          <li><strong class="text-[#081a38]">① 見積書の内訳が書かれているか</strong><br/>「一式」だけの見積書は、後から追加請求が起きやすくなります。作業費・処分費・車両費が分かれているかを確認してください。</li>
+          <li><strong class="text-[#081a38]">② 廃棄物の処理方法を説明できるか</strong><br/>一般廃棄物の収集運搬には自治体の許可が必要です。どのように処分するかを明確に答えられる業者を選んでください。</li>
+          <li><strong class="text-[#081a38]">③ 現地を見てから見積もりを出すか</strong><br/>電話だけで金額を確定する業者は注意が必要です。特に{ward.name}は{ward.challenges[1] ?? '搬出条件が現場ごとに異なります'}。</li>
+          <li><strong class="text-[#081a38]">④ 2〜3社で相見積もりを取ったか</strong><br/>1社だけでは、その金額が適正か判断できません。比較することで作業範囲の違いも見えてきます。</li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="bg-slate-50 px-5 py-10">
+      <div class="max-w-3xl mx-auto">
+        <h2 class="text-xl font-black text-[#081a38] mb-5">{ward.fullName}の遺品整理 よくある質問</h2>
+        <div class="space-y-3">
+          {faq.map((f) => (
+            <details class="bg-white rounded-xl shadow-sm overflow-hidden">
+              <summary class="flex items-center justify-between p-4 font-bold text-[#081a38] text-sm cursor-pointer hover:bg-slate-50">
+                <span>{f.q}</span>
+                <span class="text-[#2d5fa0] ml-3 flex-shrink-0">＋</span>
+              </summary>
+              <div class="px-4 pb-4 text-sm text-gray-700 leading-relaxed">{f.a}</div>
+            </details>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="bg-[#081a38] text-white px-5 py-10 text-center">
+      <div class="max-w-2xl mx-auto">
+        <h2 class="text-xl font-black mb-3">{ward.fullName}で、まずは相談だけでも</h2>
+        <p class="text-blue-100 text-sm leading-relaxed mb-6">
+          金額を知りたいだけ、日程だけ確認したい、そうしたご相談でも構いません。<br class="hidden sm:block"/>
+          しつこい営業や勧誘はいたしません。
+        </p>
+        <a href={LINE} target="_blank" rel="noopener" class="cta-btn inline-flex items-center gap-2 text-lg py-4 px-8 shadow-xl">
+          <span>LINEで無料相談する</span>
+        </a>
+      </div>
+    </section>
+
+    <!-- 他の区 -->
+    <section class="bg-white px-5 py-10">
+      <div class="max-w-3xl mx-auto">
+        <h2 class="text-lg font-black text-[#081a38] mb-4">神戸市の他のエリア</h2>
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+          {others.map((w) => (
+            <a href={`/area/${w.slug}`} class="block text-center text-sm font-bold text-[#1a4480] bg-slate-50 hover:bg-[#f0f4fa] rounded-lg py-3 transition-colors">{w.name}</a>
+          ))}
+        </div>
+      </div>
+    </section>
+  </main>
+</Layout>

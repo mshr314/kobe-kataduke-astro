@@ -1,0 +1,87 @@
+---
+import Layout from '../layouts/Layout.astro'
+
+const title = '運営者情報｜神戸お片付けサポートセンター'
+const description = '神戸お片付けサポートセンターの運営者情報です。当サイトは遺品整理業者ではなく、神戸市の遺品整理・ゴミ屋敷清掃に対応できる業者を無料で比較・ご紹介する窓口サービスです。'
+
+const schema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'AboutPage',
+    name: title,
+    description,
+    url: 'https://kobe-kataduke-support.jp/operator',
+    publisher: { '@id': 'https://kobe-kataduke-support.jp/#org' },
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'ホーム', item: 'https://kobe-kataduke-support.jp/' },
+      { '@type': 'ListItem', position: 2, name: '運営者情報', item: 'https://kobe-kataduke-support.jp/operator' },
+    ],
+  },
+]
+
+// ※ 事業者名・所在地・連絡先は、正式な情報に差し替えてください
+const info = [
+  { label: 'サイト名', value: '神戸お片付けサポートセンター' },
+  { label: 'サービス内容', value: '神戸市の遺品整理・生前整理・ゴミ屋敷清掃・特殊清掃に対応する業者の比較・紹介' },
+  { label: '対応エリア', value: '神戸市全9区（東灘区・灘区・中央区・兵庫区・北区・長田区・須磨区・垂水区・西区）' },
+  { label: 'お問い合わせ', value: 'LINEにて24時間受付' },
+]
+---
+<Layout title={title} description={description} schema={schema}>
+  <main class="max-w-3xl mx-auto px-5 py-12">
+    <nav class="text-xs text-gray-500 mb-6" aria-label="パンくず">
+      <a href="/" class="hover:underline">ホーム</a> ＞ 運営者情報
+    </nav>
+
+    <h1 class="text-2xl md:text-3xl font-black text-[#081a38] mb-6">運営者情報</h1>
+
+    <section class="bg-amber-50 border border-amber-300 rounded-xl p-5 mb-8 text-sm leading-relaxed text-amber-900">
+      <h2 class="font-black mb-2">当サイトの立場について</h2>
+      <p class="mb-2">
+        <strong>当サイトは、遺品整理を自ら行う業者ではありません。</strong>
+        神戸市内で遺品整理・ゴミ屋敷清掃などに対応できる業者を、お客様のご状況に合わせて無料でご紹介する窓口サービスです。
+      </p>
+      <p class="mb-2">
+        実際の作業は、ご紹介した提携業者が行います。<strong>ご契約は、お客様と業者との間で直接締結</strong>していただきます。
+        当サイトは契約の当事者にはなりません。
+      </p>
+      <p>
+        当サイトは、ご紹介した業者から<strong>紹介手数料を受け取る場合があります</strong>。
+        お客様から当サイトへの費用は一切いただきません。
+      </p>
+    </section>
+
+    <h2 class="text-xl font-black text-[#081a38] mb-4">基本情報</h2>
+    <dl class="border border-gray-200 rounded-xl overflow-hidden mb-8">
+      {info.map((row) => (
+        <div class="grid grid-cols-1 sm:grid-cols-3 border-b border-gray-100 last:border-b-0">
+          <dt class="bg-slate-50 px-5 py-3 text-sm font-bold text-[#081a38]">{row.label}</dt>
+          <dd class="px-5 py-3 text-sm text-gray-700 sm:col-span-2 leading-relaxed">{row.value}</dd>
+        </div>
+      ))}
+    </dl>
+
+    <h2 class="text-xl font-black text-[#081a38] mb-4">掲載情報について</h2>
+    <ul class="list-disc list-inside space-y-2 text-sm text-gray-700 leading-relaxed mb-8">
+      <li>当サイトに掲載している費用は、<strong>一般的な相場の目安</strong>であり、特定の業者の料金を保証するものではありません。</li>
+      <li>実際の料金・作業内容・対応可否は業者によって異なります。<strong>必ず見積書の内容をご確認のうえ</strong>、ご契約ください。</li>
+      <li>資格の保有状況（遺品整理士など）や許認可の有無は、業者ごとに異なります。ご不明な点は、業者へ直接お尋ねください。</li>
+      <li>掲載内容は作成時点の情報です。最新の状況と異なる場合があります。</li>
+    </ul>
+
+    <h2 class="text-xl font-black text-[#081a38] mb-4">免責事項</h2>
+    <p class="text-sm text-gray-700 leading-relaxed mb-8">
+      当サイトはお客様と業者を繋ぐ窓口であり、業者が提供する役務の内容・品質・結果について、当サイトは契約上の責任を負いません。
+      業者とのお取引において生じたトラブルについては、当事者間での解決をお願いいたします。
+      ただし、ご紹介先に関するご意見・ご報告はお寄せください。今後のご紹介の判断材料といたします。
+    </p>
+
+    <div class="text-center">
+      <a href="/" class="inline-block bg-[#081a38] text-white font-bold rounded-xl px-6 py-3 text-sm hover:opacity-90">トップページへ戻る</a>
+    </div>
+  </main>
+</Layout>

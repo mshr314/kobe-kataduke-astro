@@ -1,0 +1,69 @@
+---
+import Layout from '../../layouts/Layout.astro'
+import { WARDS } from '../../data/wards'
+
+const SITE = 'https://kobe-kataduke-support.jp'
+const title = '神戸市の遺品整理 対応エリア一覧｜全9区'
+const description = '神戸市全9区（東灘区・灘区・中央区・兵庫区・北区・長田区・須磨区・垂水区・西区）の遺品整理・ゴミ屋敷清掃に対応。区ごとの住宅事情、費用相場、業者の選び方をまとめています。'
+
+const schema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    name: title,
+    description,
+    url: `${SITE}/area`,
+    publisher: { '@id': `${SITE}/#org` },
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    name: '神戸市9区の遺品整理 対応エリア',
+    itemListElement: WARDS.map((w, i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      name: w.fullName,
+      url: `${SITE}/area/${w.slug}`,
+    })),
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'ホーム', item: `${SITE}/` },
+      { '@type': 'ListItem', position: 2, name: '対応エリア', item: `${SITE}/area` },
+    ],
+  },
+]
+---
+<Layout title={title} description={description} canonical={`${SITE}/area`} schema={schema}>
+  <main class="pb-8">
+    <section class="bg-[#081a38] text-white px-5 py-10">
+      <div class="max-w-3xl mx-auto">
+        <nav class="text-xs text-blue-300 mb-4" aria-label="パンくず">
+          <a href="/" class="hover:underline">ホーム</a> ＞ 対応エリア
+        </nav>
+        <h1 class="text-2xl md:text-3xl font-black leading-snug mb-4">神戸市の遺品整理 <span class="text-[#f5c842]">対応エリア一覧</span></h1>
+        <p class="text-blue-100 text-sm leading-relaxed">
+          神戸市全9区に対応しています。区によって住宅の種類や搬出条件は大きく異なります。
+          お住まいの区のページで、その地域ならではの事情と費用相場をご確認ください。
+        </p>
+      </div>
+    </section>
+
+    <section class="bg-white px-5 py-10">
+      <div class="max-w-3xl mx-auto">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {WARDS.map((w) => (
+            <a href={`/area/${w.slug}`} class="block border border-gray-200 rounded-2xl p-5 hover:border-[#2d5fa0] hover:shadow-md transition-all">
+              <p class="font-black text-[#081a38] text-lg mb-1">{w.fullName}</p>
+              <p class="text-xs text-gray-500 mb-3">{w.areas.slice(0, 4).join('・')} ほか</p>
+              <p class="text-sm text-gray-700 leading-relaxed line-clamp-3">{w.challenges[0]}</p>
+              <p class="text-xs font-bold text-[#1a4480] mt-3">費用相場と業者の選び方を見る →</p>
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>
+  </main>
+</Layout>
