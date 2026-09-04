@@ -1,5 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro'
+import HaishutsuDiagram from '../components/HaishutsuDiagram.astro'
 import { fetchBlogPosts } from '../sanity/client'
 
 // 体験談は掲載しない。実績がない段階で「お客様の声」を載せると
@@ -26,6 +27,14 @@ const localBusinessSchema = {
   "name": "神戸お片付けサポートセンター",
   "description": "神戸市の遺品整理・生前整理・ゴミ屋敷清掃・特殊清掃について、対応可能な業者を無料で比較・ご紹介する窓口サービスです。作業は提携する専門業者が行います。",
   "url": "https://kobe-kataduke-support.jp/",
+  "founder": { "@type": "Person", "name": "足立昌優" },
+  "address": {
+    "@type": "PostalAddress",
+    "addressCountry": "JP",
+    "addressRegion": "兵庫県",
+    "addressLocality": "神戸市中央区",
+    "streetAddress": "中山手通2丁目13番8号",
+  },
   "areaServed": [
     { "@type": "City", "name": "神戸市東灘区" },
     { "@type": "City", "name": "神戸市灘区" },
@@ -237,6 +246,10 @@ const categoryLabels: Record<string, string> = {
     </div>
   </div>
 </section>
+<div class="section-divider"></div>
+
+<!-- 搬出条件の図解（費用相場の直後に置き、金額が変わる理由を補う） -->
+<HaishutsuDiagram />
 <div class="section-divider"></div>
 
 <!-- ご相談から作業までの流れ
