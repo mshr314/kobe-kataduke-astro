@@ -375,6 +375,11 @@ const categoryLabels: Record<string, string> = {
     <h2 id="form-heading" class="text-xl md:text-2xl font-black text-center mb-2">今すぐ<span class="text-[#f5c842]">無料見積りを依頼</span>する</h2>
     <p class="text-center text-blue-200 text-sm mb-8">24時間受付。しつこい営業・勧誘は一切いたしません。</p>
     <form id="estimateForm" class="space-y-4" novalidate>
+      <!-- ハニーポット：人には見えない。自動投稿だけがここを埋める -->
+      <div class="hidden" aria-hidden="true">
+        <label for="_hp">この欄は入力しないでください</label>
+        <input type="text" id="_hp" name="_hp" tabindex="-1" autocomplete="off" />
+      </div>
       <div>
         <label for="roomType" class="block text-sm font-bold mb-1 text-blue-100">物件の間取り <span class="text-red-400">*</span></label>
         <select id="roomType" name="roomType" required class="w-full bg-[#0f2d5c] border border-white/20 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:ring-2 focus:ring-[#e8a900]">
@@ -421,7 +426,13 @@ const categoryLabels: Record<string, string> = {
     <div id="formSuccess" class="hidden text-center py-10">
       <div class="text-5xl mb-4">✅</div>
       <h3 class="font-black text-xl text-[#f5c842] mb-3">送信が完了しました！</h3>
-      <p class="text-blue-100 text-sm leading-relaxed">担当者より<strong class="text-white">当日〜翌営業日中</strong>にご連絡いたします。</p>
+      <p class="text-blue-100 text-sm leading-relaxed">
+        当サイトより<strong class="text-white">当日〜翌営業日中</strong>にご連絡し、<br class="hidden sm:block" />
+        ご状況に合う業者をご案内します。
+      </p>
+      <p class="text-blue-300 text-xs mt-3 leading-relaxed">
+        お急ぎの場合は、LINEからご連絡いただくとより早くご案内できます。
+      </p>
     </div>
   </div>
 </section>
@@ -533,27 +544,52 @@ const categoryLabels: Record<string, string> = {
     const errorMsg = document.getElementById('formError');
     const submitBtn = document.getElementById('submitBtn');
     if (!form || !successMsg || !errorMsg || !submitBtn) return;
-    form.addEventListener('submit', function (e) {
+    const originalLabel = submitBtn.textContent;
+
+    form.addEventListener('submit', async function (e) {
       e.preventDefault();
       errorMsg.classList.add('hidden');
+
       const name = document.getElementById('name').value.trim();
       const phone = document.getElementById('phone').value.trim();
       const roomType = document.getElementById('roomType').value;
       const errors = [];
       if (!name) errors.push('お名前をご入力ください。');
-      if (!phone) errors.push('お電話番号をご入力ください。');
+      if (!phone) errors.push('ご連絡先をご入力ください。');
       if (!roomType) errors.push('間取りを選択してください。');
       if (errors.length > 0) {
         errorMsg.innerHTML = errors.join('<br/>');
         errorMsg.classList.remove('hidden');
         return;
       }
+
       submitBtn.disabled = true;
       submitBtn.textContent = '送信中...';
-      setTimeout(function () {
-        form.classList.add('hidden');
-        successMsg.classList.remove('hidden');
-      }, 1200);
+
+      try {
+        const res = await fetch('/api/estimate', {
+          method: 'POST',
+          body: new FormData(form),
+        });
+        const data = await res.json().catch(function () { return { ok: false }; });
+
+        if (res.ok && data.ok) {
+          // 実際に送信できたときだけ完了画面に切り替える
+          form.classList.add('hidden');
+          successMsg.classList.remove('hidden');
+          successMsg.scrollIntoView({ block: 'center' });
+          return;
+        }
+
+        errorMsg.textContent = data.error || '送信に失敗しました。お手数ですがLINEからご相談ください。';
+        errorMsg.classList.remove('hidden');
+      } catch (err) {
+        errorMsg.textContent = '通信に失敗しました。電波状況をご確認のうえ、再度お試しください。';
+        errorMsg.classList.remove('hidden');
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = originalLabel;
+      }
     });
   })();
 </script>
