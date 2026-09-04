@@ -1,5 +1,7 @@
 ---
 import Layout from '../../layouts/Layout.astro'
+import ContactCta from '../../components/ContactCta.astro'
+import WardLinks from '../../components/WardLinks.astro'
 import { fetchBlogPosts } from '../../sanity/client'
 
 let posts: any[] = []
@@ -36,9 +38,9 @@ const categoryLabels: Record<string, string> = {
       <span class="text-[#f5c842] font-black text-lg tracking-tight">神戸お片付けサポートセンター</span>
       <span class="text-blue-200 text-xs mt-0.5">遺品整理・ゴミ屋敷清掃の専門窓口</span>
     </a>
-    <a href="tel:050XXXXXXXX" class="cta-btn tel-link text-sm px-5 py-2.5">
-      <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M3 5.5a15.5 15.5 0 0015 15l2.5-2.5-3-3-2 2a11 11 0 01-7-7l2-2-3-3L3 5.5z"/></svg>
-      <span class="font-black">050-XXXX-XXXX</span>
+    <a href="https://line.me/R/ti/p/@622cifkz" target="_blank" rel="noopener" class="cta-btn tel-link text-sm px-5 py-2.5">
+      <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 flex-shrink-0" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2C6.48 2 2 5.82 2 10.5c0 2.67 1.5 5.05 3.86 6.6-.13.5-.7 2.5-.72 2.66 0 0-.02.12.06.17.08.05.18.02.18.02.24-.03 2.8-1.84 3.24-2.15.45.06.9.1 1.38.1 5.52 0 10-3.82 10-8.5S17.52 2 12 2z"/></svg>
+      <span class="font-black">LINEで無料相談</span>
     </a>
   </div>
 </header>
@@ -72,14 +74,11 @@ const categoryLabels: Record<string, string> = {
       ))}
     </div>
 
-    <div class="mt-12 bg-[#081a38] text-white rounded-2xl p-6 text-center">
-      <p class="font-black text-lg mb-2">まずはお気軽にご相談ください</p>
-      <p class="text-blue-200 text-sm mb-4">24時間・年中無休で受付中です</p>
-      <a href="tel:050XXXXXXXX" class="cta-btn tel-link text-lg px-8 py-4 mx-auto">
-        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M3 5.5a15.5 15.5 0 0015 15l2.5-2.5-3-3-2 2a11 11 0 01-7-7l2-2-3-3L3 5.5z"/></svg>
-        無料見積りに電話する
-      </a>
+    <div class="mt-12">
+      <ContactCta />
     </div>
+
+    <WardLinks />
   </div>
 </main>
 

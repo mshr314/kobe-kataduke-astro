@@ -70,6 +70,29 @@ export const blogPost = defineType({
       ],
     }),
     defineField({
+      name: 'faqItems',
+      title: 'よくある質問（Q&A）',
+      type: 'array',
+      description:
+        '記事内にQ&Aとして表示し、FAQPage構造化データとしても出力します。' +
+        '本文に書いていない内容は入れないでください（実体のない構造化データは規約違反になります）。',
+      of: [
+        {
+          type: 'object',
+          name: 'faqItem',
+          title: 'Q&A',
+          fields: [
+            { name: 'question', title: '質問（Q）', type: 'string', validation: (Rule: any) => Rule.required() },
+            { name: 'answer', title: '回答（A）', type: 'text', rows: 4, validation: (Rule: any) => Rule.required() },
+          ],
+          preview: {
+            select: { title: 'question' },
+            prepare: (v: Record<string, any>) => ({ title: `Q: ${v.title}` }),
+          },
+        },
+      ],
+    }),
+    defineField({
       name: 'seoTitle',
       title: 'SEOタイトル（省略時は記事タイトルを使用）',
       type: 'string',

@@ -48,8 +48,10 @@ export async function fetchBlogPost(slug: string) {
         excerpt,
         eyecatch,
         body,
+        faqItems,
         seoTitle,
         seoDescription,
+        _updatedAt,
       }
     `, { slug })
   } catch {

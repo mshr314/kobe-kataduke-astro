@@ -1,0 +1,46 @@
+---
+/**
+ * 相談導線（LINE）の共通CTA。
+ * 電話番号は当サイトでは公開していないため、連絡手段はLINEに統一する。
+ * （記事ページに tel:050XXXXXXXX というダミー番号が残っていたため、
+ *   実在しない番号への発信を防ぐ目的も兼ねてコンポーネント化した）
+ */
+interface Props {
+  /** 見出し。文脈に合わせて差し替える */
+  heading?: string
+  /** 補足文 */
+  note?: string
+  /** 余白の詰め具合 */
+  compact?: boolean
+}
+
+const {
+  heading = '神戸市のお片付け、まずは無料でご相談ください',
+  note = 'ご相談・業者のご紹介は無料です。しつこい勧誘はいたしません。',
+  compact = false,
+} = Astro.props
+
+const LINE_URL = 'https://line.me/R/ti/p/@622cifkz'
+---
+
+<aside class={`bg-[#081a38] text-white rounded-2xl text-center ${compact ? 'p-5' : 'p-6 md:p-8'}`}>
+  <p class="font-black text-lg md:text-xl mb-2 leading-snug">{heading}</p>
+  <p class="text-blue-200 text-sm mb-5 leading-relaxed">{note}</p>
+
+  <a
+    href={LINE_URL}
+    target="_blank"
+    rel="noopener"
+    class="cta-btn tel-link text-lg px-8 py-4 mx-auto"
+  >
+    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 flex-shrink-0" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <path d="M12 2C6.48 2 2 5.82 2 10.5c0 2.67 1.5 5.05 3.86 6.6-.13.5-.7 2.5-.72 2.66 0 0-.02.12.06.17.08.05.18.02.18.02.24-.03 2.8-1.84 3.24-2.15.45.06.9.1 1.38.1 5.52 0 10-3.82 10-8.5S17.52 2 12 2z"/>
+    </svg>
+    LINEで無料相談する
+  </a>
+
+  <p class="text-blue-300 text-xs mt-4">
+    24時間受付／返信は最短即日<br />
+    お住まいの区・間取り・希望時期をお送りいただくと、ご案内がスムーズです。
+  </p>
+</aside>
