@@ -132,8 +132,7 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
   try {
     const { Resend } = await import('resend')
     const resend = new Resend(apiKey)
-    const result = await resend.emails.send({
-      from,
+    const message = {
       to,
       // メールアドレスの記入があれば、受信メールの「返信」でそのまま返せるようにする
       replyTo: email || undefined,
@@ -152,7 +151,16 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
         </table>
         <p style="font-family:sans-serif;color:#666;font-size:12px">神戸お片付けサポートセンター（自動送信）</p>
       `,
-    })
+    }
+
+    let result = await resend.emails.send({ from, ...message })
+
+    // 独自ドメインの送信元が使えないとき（DNS認証の完了前・認証切れなど）は、
+    // 既定の送信元で送り直す。見積もり依頼を取りこぼさないことを優先する。
+    if ((result as any)?.error && from !== FROM_EMAIL_DEFAULT) {
+      console.error('[estimate] 送信元での送信に失敗。既定の送信元で再送します:', (result as any).error)
+      result = await resend.emails.send({ from: FROM_EMAIL_DEFAULT, ...message })
+    }
 
     if ((result as any)?.error) {
       console.error('[estimate] Resend error:', (result as any).error)
