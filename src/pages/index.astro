@@ -591,6 +591,27 @@ const categoryLabels: Record<string, string> = {
         const data = await res.json().catch(function () { return { ok: false }; });
 
         if (res.ok && data.ok) {
+          // GA4 に成果（見積もり依頼）を送る。送信に成功したときだけ、1回だけ。
+          // 名前・連絡先・相談内容などの個人情報は送らない。
+          // from_page：このページに来る直前に見ていたサイト内のページ（どの地域ページ・記事から来たか）
+          var hp = form.querySelector('[name="_hp"]');
+          if (typeof window.gtag === 'function' && !(hp && hp.value)) {
+            var fromPage = '(直接・外部)';
+            try {
+              var ref = new URL(document.referrer);
+              if (ref.origin === location.origin) fromPage = ref.pathname;
+            } catch (_) {}
+            var services = Array.prototype.map
+              .call(form.querySelectorAll('[name="service"]:checked'), function (el) { return el.value; })
+              .join(',');
+            window.gtag('event', 'generate_lead', {
+              form_name: 'estimate',
+              room_type: roomType,
+              services: services || '(未選択)',
+              from_page: fromPage,
+            });
+          }
+
           // 実際に送信できたときだけ完了画面に切り替える
           form.classList.add('hidden');
           successMsg.classList.remove('hidden');
