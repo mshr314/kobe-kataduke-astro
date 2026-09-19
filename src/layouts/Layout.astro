@@ -19,8 +19,11 @@ const {
   noindex = false,
 } = Astro.props;
 
-const canonicalUrl = canonical || Astro.url.href;
 const siteBase = 'https://kobe-kataduke-support.jp';
+// canonical を渡さないページは、パスだけを取り出して正式なドメインに付け直す。
+// Astro.url.href をそのまま使うと、Vercel のサーバー実行時にホストが localhost になり、
+// canonical が https://localhost/... を指してしまう（検索エンジンが正しいURLを登録できない）。
+const canonicalUrl = canonical || new URL(Astro.url.pathname, siteBase).href;
 const ogImageUrl = ogImage.startsWith('http') ? ogImage : `${siteBase}${ogImage}`;
 // GA4：PUBLIC_GA_ID が設定されている時だけ計測タグを出力する
 const gaId = import.meta.env.PUBLIC_GA_ID;
