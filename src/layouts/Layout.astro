@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css'
+import SiteFooter from '../components/SiteFooter.astro'
 
 interface Props {
   title?: string;
@@ -84,5 +85,6 @@ const gaId = import.meta.env.PUBLIC_GA_ID;
   </head>
   <body class="font-sans bg-white text-gray-800 antialiased pb-24">
     <slot />
+    <SiteFooter />
   </body>
 </html>
