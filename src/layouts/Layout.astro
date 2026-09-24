@@ -86,5 +86,15 @@ const gaId = import.meta.env.PUBLIC_GA_ID;
   <body class="font-sans bg-white text-gray-800 antialiased pb-24">
     <slot />
     <SiteFooter />
+    <script is:inline>
+      // LINEのタップを成果として計測する（個人情報は送らない）
+      document.querySelectorAll('[data-line-cta]').forEach(function (a) {
+        a.addEventListener('click', function () {
+          if (typeof window.gtag === 'function') {
+            window.gtag('event', 'line_click', { placement: a.getAttribute('data-line-cta') || '' });
+          }
+        });
+      });
+    </script>
   </body>
 </html>

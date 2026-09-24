@@ -1,6 +1,7 @@
 ---
 import Layout from '../../layouts/Layout.astro'
 import ContactCta from '../../components/ContactCta.astro'
+import AffiliateSlot from '../../components/AffiliateSlot.astro'
 import WardLinks from '../../components/WardLinks.astro'
 import { fetchBlogPost, fetchBlogPosts } from '../../sanity/client'
 // PortableTextをシンプルなHTMLに変換するユーティリティ
@@ -183,6 +184,8 @@ const breadcrumbSchema = {
 
     <div class="mt-10">
       <ContactCta />
+
+      <AffiliateSlot slug={slug} />
     </div>
 
     {related.length > 0 && (
