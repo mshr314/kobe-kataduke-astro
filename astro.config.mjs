@@ -18,7 +18,10 @@ export default defineConfig({
       studioBasePath: '/admin',
     }),
     react(),
-    sitemap(),
+    sitemap({
+      // 広告用LPは noindex のため、サイトマップからも外す
+      filter: (page) => !page.includes('/lp/'),
+    }),
   ],
   output: 'server',
   adapter: vercel(),
