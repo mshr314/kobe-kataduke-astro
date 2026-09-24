@@ -1,0 +1,157 @@
+---
+/**
+ * 広告専用のランディングページ（神戸市 × 遺品整理）
+ *
+ * 通常ページとの違い:
+ *  - ヘッダーのナビや他ページへの回遊リンクを置かない。出口は見積もりとLINEだけ
+ *  - 検索結果には出さない（noindex）。自然検索はトップ・区ページ・記事が担当する
+ *  - 広告の審査で見られるため、運営者情報とプライバシーポリシーへの導線は残す
+ *    （共通フッターに含まれる）
+ */
+import Layout from '../../layouts/Layout.astro'
+import EstimateForm from '../../components/EstimateForm.astro'
+
+const LINE_URL = 'https://line.me/R/ti/p/@622cifkz'
+
+const worries = [
+  { t: '何から手をつければいいか分からない', b: '家財の量、遺言書や通帳の扱い、退去の期限。順番が決まっていないと動けません。' },
+  { t: '費用がいくらになるか読めない', b: '間取りと物量で大きく変わります。まず相場を知ることから始められます。' },
+  { t: '悪質な業者に当たらないか不安', b: '見積書の内訳が曖昧な業者、追加料金の説明がない業者は避けるべきです。' },
+  { t: '遠方に住んでいて立ち会えない', b: '立ち会いなしに対応する業者もあります。条件に合う先をお探しします。' },
+]
+
+const prices = [
+  ['1K・1R', '30,000円〜'],
+  ['1DK・1LDK', '80,000円〜'],
+  ['2DK・2LDK', '120,000円〜'],
+  ['3DK・3LDK', '150,000円〜'],
+  ['4LDK・一戸建て', '250,000円〜'],
+]
+
+const steps = [
+  ['01', 'ご相談', 'フォームかLINEで、分かる範囲のご状況をお知らせください。費用はかかりません。'],
+  ['02', '業者のご紹介', 'ご状況に合う業者をお伝えします。合わなければ断っていただいて構いません。'],
+  ['03', 'お見積もり', '業者が現地を確認し、見積書をお出しします。金額に納得できてからのご契約です。'],
+  ['04', '作業', 'ご契約は業者と直接結んでいただきます。当サイトは契約の当事者にはなりません。'],
+]
+
+const faqs = [
+  { q: '相談や紹介に費用はかかりますか？', a: 'かかりません。当サイトは、ご紹介した業者から紹介手数料を受け取って運営しています。お客様からいただく費用はありません。' },
+  { q: '紹介された業者に必ず頼まないといけませんか？', a: 'いいえ。見積もりを見たうえでお断りいただけます。ご契約はお客様と業者との間で直接結んでいただくため、当サイトが契約を勧めることはありません。' },
+  { q: 'しつこく営業されませんか？', a: 'ご希望がない限り、繰り返しのご連絡はいたしません。ご不要になった場合はその旨お知らせください。' },
+  { q: '対応エリアはどこですか？', a: '神戸市全9区（東灘区・灘区・中央区・兵庫区・北区・長田区・須磨区・垂水区・西区）です。' },
+]
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map((f) => ({
+    '@type': 'Question', name: f.q,
+    acceptedAnswer: { '@type': 'Answer', text: f.a },
+  })),
+}
+---
+
+<Layout
+  title="神戸市の遺品整理｜無料で業者を比較・ご紹介【相談無料・24時間受付】"
+  description="神戸市全9区対応。遺品整理の費用相場と、ご状況に合う業者を無料でご紹介します。ご相談・紹介は無料、しつこい営業はありません。"
+  noindex={true}
+  schema={[faqSchema]}
+>
+  <!-- ファーストビュー -->
+  <section class="bg-[#081a38] text-white px-5 py-10 md:py-14">
+    <div class="max-w-2xl mx-auto text-center">
+      <p class="inline-block bg-[#e8a900] text-[#081a38] text-xs font-black px-4 py-1.5 rounded-full mb-5 tracking-widest">神戸市全9区対応・相談無料</p>
+      <h1 class="text-2xl md:text-4xl font-black leading-snug mb-4">
+        神戸市の遺品整理。<br />
+        <span class="text-[#f5c842]">ご状況に合う業者を、</span>無料でご紹介します。
+      </h1>
+      <p class="text-blue-100 text-sm md:text-base leading-relaxed mb-7">
+        間取りと物量で費用は変わります。まず相場を知るところからで構いません。<br class="hidden md:block" />
+        当サイトは業者ではなく、<strong class="text-white">比較してお繋ぎする窓口</strong>です。
+      </p>
+      <div class="flex flex-col items-center gap-3">
+        <a href="#estimate-form" class="cta-btn w-full max-w-sm text-lg py-4 px-8">無料で見積もりを依頼する</a>
+        <a href={LINE_URL} target="_blank" rel="noopener" data-line-cta="lp-ihinseiri" class="cta-btn tel-link w-full max-w-sm text-lg py-4 px-8">LINEで相談する（24時間）</a>
+      </div>
+      <p class="mt-5 text-blue-200 text-xs">ご相談・紹介は無料／秘密厳守／お断りいただけます</p>
+    </div>
+  </section>
+
+  <!-- 費用の目安 -->
+  <section class="px-5 py-12 bg-white">
+    <div class="max-w-2xl mx-auto">
+      <h2 class="text-xl md:text-2xl font-black text-center mb-2">費用の目安</h2>
+      <p class="text-center text-gray-600 text-sm mb-6">間取り別のおおよその相場です。物量や搬出のしやすさで変わります。</p>
+      <div class="overflow-hidden rounded-xl border border-gray-200">
+        <table class="w-full text-sm">
+          <tbody>
+            {prices.map(([k, v], i) => (
+              <tr class={i % 2 ? 'bg-gray-50' : 'bg-white'}>
+                <th class="text-left font-bold text-gray-800 px-4 py-3 w-1/2">{k}</th>
+                <td class="px-4 py-3 text-[#0f2d5c] font-bold">{v}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <p class="mt-3 text-xs text-gray-500 leading-relaxed">
+        上記は一般的な相場の目安であり、特定の業者の料金を保証するものではありません。正確な金額は現地見積もりでご確認ください。
+      </p>
+    </div>
+  </section>
+
+  <!-- 不安に答える -->
+  <section class="px-5 py-12 bg-gray-50">
+    <div class="max-w-2xl mx-auto">
+      <h2 class="text-xl md:text-2xl font-black text-center mb-8">こんなことで迷っていませんか</h2>
+      <div class="space-y-3">
+        {worries.map((w) => (
+          <div class="bg-white rounded-xl border border-gray-200 p-5">
+            <p class="font-bold text-gray-900 mb-1.5">「{w.t}」</p>
+            <p class="text-sm text-gray-600 leading-relaxed">{w.b}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- 流れ -->
+  <section class="px-5 py-12 bg-white">
+    <div class="max-w-2xl mx-auto">
+      <h2 class="text-xl md:text-2xl font-black text-center mb-8">ご利用の流れ</h2>
+      <ol class="space-y-4">
+        {steps.map(([no, t, b]) => (
+          <li class="flex gap-4 rounded-xl border border-gray-200 p-5">
+            <span class="font-black text-[#e8a900] text-lg leading-none pt-1">{no}</span>
+            <div>
+              <p class="font-bold text-gray-900 mb-1">{t}</p>
+              <p class="text-sm text-gray-600 leading-relaxed">{b}</p>
+            </div>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <!-- フォーム（トップと共通の部品） -->
+  <EstimateForm />
+
+  <!-- よくある質問 -->
+  <section class="px-5 py-12 bg-white">
+    <div class="max-w-2xl mx-auto">
+      <h2 class="text-xl md:text-2xl font-black text-center mb-8">よくあるご質問</h2>
+      <div class="space-y-3">
+        {faqs.map((f) => (
+          <details class="rounded-xl border border-gray-200 bg-white px-5 py-4">
+            <summary class="font-bold text-gray-900 text-sm cursor-pointer">{f.q}</summary>
+            <p class="mt-3 pt-3 border-t border-gray-100 text-sm text-gray-600 leading-relaxed">{f.a}</p>
+          </details>
+        ))}
+      </div>
+      <div class="mt-8 text-center">
+        <a href="#estimate-form" class="cta-btn inline-flex text-lg py-4 px-10">無料で見積もりを依頼する</a>
+      </div>
+    </div>
+  </section>
+</Layout>
