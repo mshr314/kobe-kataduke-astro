@@ -4,23 +4,66 @@ import ContactCta from '../../components/ContactCta.astro'
 import AffiliateSlot from '../../components/AffiliateSlot.astro'
 import WardLinks from '../../components/WardLinks.astro'
 import { fetchBlogPost, fetchBlogPosts } from '../../sanity/client'
-// PortableTextをシンプルなHTMLに変換するユーティリティ
+// PortableTextをHTMLに変換するユーティリティ
+// 対応：見出し(h2/h3)・段落・引用・箇条書き/番号付きリスト・太字・リンク
+// 本文はそのままHTMLに埋め込むため、文字は必ずエスケープする。
+function esc(s: string): string {
+  return String(s).replace(/[&<>"']/g, (c) =>
+    ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c] as string)
+  )
+}
+
+function spansToHtml(block: any): string {
+  const defs: Record<string, any> = {}
+  for (const d of block.markDefs || []) defs[d._key] = d
+  return (block.children || []).map((c: any) => {
+    let html = esc(c.text || '')
+    for (const m of c.marks || []) {
+      if (m === 'strong') html = `<strong class="font-bold text-gray-900">${html}</strong>`
+      else if (m === 'em') html = `<em>${html}</em>`
+      else if (defs[m]?._type === 'link' && defs[m].href) {
+        const href = String(defs[m].href)
+        // サイト内リンク（/ から始まる）は同じタブ、外部は新しいタブで開く
+        const internal = href.startsWith('/')
+        const safe = /^(\/|https?:\/\/)/.test(href) ? href : '#'
+        html = `<a href="${esc(safe)}" class="text-[#1a4480] underline underline-offset-2 hover:text-[#c98700]"${internal ? '' : ' target="_blank" rel="noopener"'}>${html}</a>`
+      }
+    }
+    return html
+  }).join('')
+}
+
 function ptToHtml(blocks: any[]): string {
   if (!blocks) return ''
-  return blocks.map(block => {
+  const out: string[] = []
+  let list: { type: string; items: string[] } | null = null
+  const flush = () => {
+    if (!list) return
+    const tag = list.type === 'number' ? 'ol' : 'ul'
+    const cls = list.type === 'number' ? 'list-decimal' : 'list-disc'
+    out.push(`<${tag} class="${cls} pl-6 mb-5 space-y-1.5 leading-relaxed">${list.items.map((i) => `<li>${i}</li>`).join('')}</${tag}>`)
+    list = null
+  }
+  for (const block of blocks) {
+    if (block._type === 'block' && block.listItem) {
+      if (!list || list.type !== block.listItem) { flush(); list = { type: block.listItem, items: [] } }
+      list.items.push(spansToHtml(block))
+      continue
+    }
+    flush()
     if (block._type === 'block') {
-      const text = (block.children || []).map((c: any) => c.text || '').join('')
+      const text = spansToHtml(block)
       const style = block.style || 'normal'
-      if (style === 'h2') return `<h2 class="text-xl font-black text-navy-800 mt-8 mb-3">${text}</h2>`
-      if (style === 'h3') return `<h3 class="text-lg font-bold text-navy-700 mt-6 mb-2">${text}</h3>`
-      if (style === 'blockquote') return `<blockquote class="border-l-4 border-navy-300 pl-4 text-gray-500 italic my-4">${text}</blockquote>`
-      return `<p class="mb-4 leading-relaxed">${text}</p>`
+      if (style === 'h2') out.push(`<h2 class="text-xl font-black text-navy-800 mt-8 mb-3">${text}</h2>`)
+      else if (style === 'h3') out.push(`<h3 class="text-lg font-bold text-navy-700 mt-6 mb-2">${text}</h3>`)
+      else if (style === 'blockquote') out.push(`<blockquote class="border-l-4 border-navy-300 pl-4 text-gray-500 italic my-4">${text}</blockquote>`)
+      else out.push(`<p class="mb-4 leading-relaxed">${text}</p>`)
+    } else if (block._type === 'image' && block.asset) {
+      out.push(`<img src="${esc(block.asset.url || '')}" alt="${esc(block.alt || '')}" class="rounded-xl my-6 w-full"/>`)
     }
-    if (block._type === 'image' && block.asset) {
-      return `<img src="${block.asset.url || ''}" alt="${block.alt || ''}" class="rounded-xl my-6 w-full"/>`
-    }
-    return ''
-  }).join('')
+  }
+  flush()
+  return out.join('')
 }
 
 export const prerender = false

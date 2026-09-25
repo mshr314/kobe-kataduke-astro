@@ -68,6 +68,10 @@ export const ARTICLE_OFFER: Record<string, keyof typeof OFFERS> = {
   'oya-no-ie-katazuke-tejun': 'shukatsu',
   'ihinseiri-itsukara-kobe': 'souzoku',
   'akiya-jissou-kobe': 'fudosan',
+  // 終活まわりの記事（2026-09 追加）
+  'shukatsu-nanikara-kobe': 'shukatsu',
+  'jikka-jimai-kobe': 'fudosan',
+  'butsudan-kuyou-shobun-kobe': 'shukatsu',
 }
 
 export function offerFor(slug: string): Offer | null {
